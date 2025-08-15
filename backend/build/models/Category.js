@@ -38,5 +38,5 @@ const CatSchema = new mongoose_1.Schema({
     title: { type: String, required: true },
     questions: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Question' }]
 });
-exports.default = mongoose_1.default.model("User", CatSchema);
+exports.default = mongoose_1.default.model("Category", CatSchema);
 //# sourceMappingURL=Category.js.map

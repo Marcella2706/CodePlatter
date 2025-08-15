@@ -1,13 +1,13 @@
 import mongoose, {Schema, Document} from "mongoose";
 export interface IQuestion extends Document {
     title: String;
-    url: String;
+    url: String[];
     difficulty: 'Easy'|'Medium'|'Hard';
 }
 
 const QuesSchema: Schema = new Schema({
     title: {type: String},
-    url: {type: String},
+    url: {type: [String]},
     difficulty: {type: String, enum:['Easy','Medium','Hard'], required: true}
 });
 

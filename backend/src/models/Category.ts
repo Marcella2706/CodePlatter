@@ -9,4 +9,4 @@ const CatSchema: Schema = new Schema({
     questions: [{type: Schema.Types.ObjectId, ref: 'Question'}]
 });
 
-export default mongoose.model<ICategory>("User", CatSchema);
+export default mongoose.model<ICategory>("Category", CatSchema);

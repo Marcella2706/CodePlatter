@@ -36,7 +36,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const QuesSchema = new mongoose_1.Schema({
     title: { type: String },
-    url: { type: String },
+    url: { type: [String] },
     difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], required: true }
 });
 exports.default = mongoose_1.default.model('Question', QuesSchema);

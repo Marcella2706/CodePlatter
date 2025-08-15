@@ -6,8 +6,7 @@ import Category from '../models/Category'
 
 dotenv.config()
 
-const seedData=async()=>{
-    await connectDB();
+export const seedData=async()=>{
     try{
         const res = await axios.get<{
             status:boolean;
@@ -19,7 +18,7 @@ const seedData=async()=>{
             const questions=await Question.insertMany(
                 categoryData.ques.map((q)=>({
                     title: q.title,
-                    url: q.yt_link || q.p1_link || q.p2_link || '',
+                    url: [q.yt_link, q.p1_link, q.p2_link].filter(link=>link),
                     difficulty: 'Easy',
                 }))
             );
@@ -36,5 +35,3 @@ const seedData=async()=>{
         process.exit(1)
     }
 }
-
-seedData();

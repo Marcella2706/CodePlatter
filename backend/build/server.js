@@ -41,15 +41,13 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 const db_1 = require("./config/db");
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+const seeder_1 = require("./utils/seeder");
 dotenv.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
+(0, seeder_1.seedData)();
 app.use('/api/v1/auth', authRoutes_1.default);
-app.post('/test', (req, res) => {
-    console.log('POST received!');
-    res.send('heloooo');
-});
 (0, db_1.connectDB)().then(() => {
     app.listen(process.env.PORT || 5000, () => {
         console.log(`Server running on port ${process.env.PORT || 5000}`);
