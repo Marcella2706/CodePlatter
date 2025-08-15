@@ -1,4 +1,3 @@
-import { CANCELLED } from "dns";
 import mongoose, {Schema, Document} from "mongoose";
 export interface ICategory extends Document {
     title: String;
