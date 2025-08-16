@@ -1,10 +1,8 @@
 import { Router } from "express";
 import Category from "../models/Category";
-import mongoose from "mongoose";
 
 const router = Router();
 
-// Helper function to build difficulty sort aggregation
 const getDifficultySortStage = (order: string) => {
     const difficultyOrder = { 'Easy': 1, 'Medium': 2, 'Hard': 3 };
     return {
@@ -26,27 +24,23 @@ const getDifficultySortStage = (order: string) => {
 router.get('/', async (req, res) => {
     try {
         const { search, difficulty, page = 1, limit = 50, sortBy } = req.query;
-        
-        // Build aggregation pipeline for better performance with filtering and sorting
+      
         const pipeline: any[] = [];
 
-        // Step 1: Lookup questions and apply filters
         pipeline.push({
             $lookup: {
-                from: 'questions', // Assuming your questions collection name
+                from: 'questions', 
                 localField: 'questions',
                 foreignField: '_id',
                 as: 'questions',
                 pipeline: [
-                    // Apply question filters
                     ...(search || difficulty ? [{
                         $match: {
                             ...(search && { title: { $regex: search as string, $options: 'i' } }),
                             ...(difficulty && { difficulty: difficulty })
                         }
                     }] : []),
-                    
-                    // Sort questions within each category
+              
                     ...(sortBy ? (() => {
                         const [field, order] = (sortBy as string).split('_');
                         if (field === 'difficulty') {
@@ -66,29 +60,24 @@ router.get('/', async (req, res) => {
             }
         });
 
-        // Step 2: Filter categories that have questions (when filters are applied)
         if (search || difficulty) {
             pipeline.push({
                 $match: {
-                    'questions.0': { $exists: true } // Only categories with at least one question
+                    'questions.0': { $exists: true }
                 }
             });
         }
 
-        // Step 3: Sort categories
         pipeline.push({
             $sort: { title: 1 }
         });
 
-        // Execute aggregation to get filtered categories
         const allCategories = await Category.aggregate(pipeline);
 
-        // Apply pagination
         const totalCategories = allCategories.length;
         const skip = (Number(page) - 1) * Number(limit);
         const paginatedCategories = allCategories.slice(skip, skip + Number(limit));
 
-        // Calculate statistics
         const totalQuestions = allCategories.reduce((sum, category) => 
             sum + (category.questions ? category.questions.length : 0), 0
         );

@@ -19,7 +19,6 @@ export const seedData = async () => {
             throw new Error('API returned error status');
         }
 
-        // Clear existing data
         await Question.deleteMany({});
         await Category.deleteMany({});
         console.log('Cleared existing data');
@@ -27,7 +26,6 @@ export const seedData = async () => {
         for (const categoryData of res.data.data) {
             console.log(`Processing category: ${categoryData.title}`);
             
-            // Filter and validate questions
             const validQuestions = categoryData.ques.filter(q => 
                 q.title && q.title.trim() !== ''
             );
@@ -39,14 +37,13 @@ export const seedData = async () => {
 
             const questions = await Question.insertMany(
                 validQuestions.map((q) => {
-                    // Collect all non-empty URLs
                     const urls = [q.yt_link, q.p1_link, q.p2_link]
                         .filter(link => link && link.trim() !== '');
                     
                     return {
                         title: q.title.trim(),
                         url: urls,
-                        difficulty: q.difficulty || 'Easy', // Default to Easy if not specified
+                        difficulty: q.difficulty || 'Easy',
                     };
                 })
             );

@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 
 const router = Router();
 
-// Type for populated user
 interface PopulatedUser extends Omit<IUser, 'progress' | 'bookmarks'> {
     progress: IQuestion[];
     bookmarks: IQuestion[];
@@ -28,10 +27,9 @@ router.post('/progress', authMiddleware, async (req: any, res) => {
         if(!user) return res.status(404).json({message: 'User not found'});
         
         if(completed === false || completed === 'false') {
-            // Remove from progress
             user.progress = user.progress.filter(id => !id.equals(questionId));
-        } else {
-            // Add to progress if not already there
+        } 
+        else {
             if(!user.progress.includes(questionId)){
                 user.progress.push(questionId);
             }
@@ -105,10 +103,9 @@ router.get('/progress/detailed', authMiddleware, async (req: any, res) => {
         
         const completedQuestions = user.progress.map(question => ({
             questionId: question,
-            completedAt: new Date() // Consider adding timestamps to track when completed
+            completedAt: new Date() 
         }));
 
-        // Calculate stats by difficulty - now TypeScript knows about difficulty property
         const easyCompleted = user.progress.filter(q => q.difficulty === 'Easy').length;
         const mediumCompleted = user.progress.filter(q => q.difficulty === 'Medium').length;
         const hardCompleted = user.progress.filter(q => q.difficulty === 'Hard').length;
