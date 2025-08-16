@@ -37,6 +37,8 @@ const mongoose_1 = __importStar(require("mongoose"));
 const CatSchema = new mongoose_1.Schema({
     title: { type: String, required: true },
     questions: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Question' }]
+}, {
+    timestamps: true
 });
 exports.default = mongoose_1.default.model("Category", CatSchema);
 //# sourceMappingURL=Category.js.map

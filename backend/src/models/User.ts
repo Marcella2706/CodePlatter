@@ -1,4 +1,5 @@
 import mongoose, {Schema, Document} from "mongoose";
+
 export interface IUser extends Document {
     name: String;
     email: String;
@@ -13,6 +14,8 @@ const UserSchema: Schema = new Schema({
     password: {type: String, required: true},
     bookmarks: [{type: Schema.Types.ObjectId, ref:'Question'}],
     progress: [{type: Schema.Types.ObjectId, ref:'Question'}]
+}, {
+    timestamps: true 
 });
 
 export default mongoose.model<IUser>("User", UserSchema);

@@ -1,4 +1,5 @@
 import mongoose, {Schema, Document} from "mongoose";
+
 export interface IQuestion extends Document {
     title: String;
     url: String[];
@@ -6,8 +7,8 @@ export interface IQuestion extends Document {
 }
 
 const QuesSchema: Schema = new Schema({
-    title: {type: String},
-    url: {type: [String]},
+    title: {type: String, required: true},
+    url: {type: [String], default: []},
     difficulty: {type: String, enum:['Easy','Medium','Hard'], required: true}
 });
 
