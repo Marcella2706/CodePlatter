@@ -4,6 +4,9 @@ import QuestionCard from '@/components/dashboard/QuestionCard';
 import { toast } from '@/components/hooks/use-toast';
 import { Loader2, BookmarkX } from 'lucide-react';
 
+
+const BASE_URL = "http://localhost:5703";
+
 interface Question {
   _id: string;
   title: string;
@@ -27,8 +30,7 @@ const Bookmarks: React.FC = () => {
       if (!token) return;
 
       try {
-        // Fetch bookmarks
-        const bookmarksResponse = await fetch('/api/v1/user/bookmarks', {
+        const bookmarksResponse = await fetch(`${BASE_URL}/api/v1/user/bookmarks`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -38,9 +40,7 @@ const Bookmarks: React.FC = () => {
           const bookmarksData = await bookmarksResponse.json();
           setBookmarks(bookmarksData.bookmarks || []);
         }
-
-        // Fetch completed questions
-        const progressResponse = await fetch('/api/v1/user/progress', {
+        const progressResponse = await fetch(`${BASE_URL}/api/v1/user/progress`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -90,7 +90,6 @@ const Bookmarks: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
             Your Bookmarks
@@ -105,7 +104,6 @@ const Bookmarks: React.FC = () => {
           )}
         </div>
 
-        {/* Bookmarks List */}
         {bookmarks.length > 0 ? (
           <div className="space-y-4 max-w-4xl mx-auto">
             {bookmarks.map((bookmark) => (

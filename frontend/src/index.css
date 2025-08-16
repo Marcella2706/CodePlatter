@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Custom animations for enhanced UI */
 .animate-fade-in {
   animation: fadeIn 0.3s ease-in-out;
 }
@@ -61,13 +60,11 @@
   }
 }
 
-/* Smooth transitions for all interactive elements */
 * {
   transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Enhanced focus styles */
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
@@ -75,7 +72,6 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-/* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
 }

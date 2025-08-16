@@ -31,7 +31,6 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   const [isSearching, setIsSearching] = useState(false);
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Debounced search with 300ms delay
   useEffect(() => {
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -51,15 +50,22 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
     };
   }, [searchInput, onSearchChange]);
 
-  // Update local search input when external search changes
   useEffect(() => {
     setSearchInput(currentSearch);
   }, [currentSearch]);
 
   const clearFilters = () => {
     setSearchInput('');
-    onDifficultyChange('');
-    onSortChange('');
+    onDifficultyChange('all');
+    onSortChange('default');
+  };
+
+  const handleDifficultyChange = (value: string) => {
+    onDifficultyChange(value === 'all' ? '' : value);
+  };
+
+  const handleSortChange = (value: string) => {
+    onSortChange(value === 'default' ? '' : value);
   };
 
   const hasActiveFilters = currentSearch || currentDifficulty || currentSort;
@@ -86,7 +92,6 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Search Input with debouncing indicator */}
         <div className="relative">
           <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
           {isSearching && (
@@ -100,13 +105,15 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           />
         </div>
 
-        {/* Difficulty Filter */}
-        <Select value={currentDifficulty} onValueChange={onDifficultyChange}>
+        <Select 
+          value={currentDifficulty || 'all'} 
+          onValueChange={handleDifficultyChange}
+        >
           <SelectTrigger className="bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white focus:border-blue-400">
             <SelectValue placeholder="Filter by difficulty" />
           </SelectTrigger>
           <SelectContent className="bg-gray-900/95 border-gray-700 backdrop-blur-xl">
-            <SelectItem value="" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="all" className="text-gray-300 focus:text-white focus:bg-white/10">
               All Difficulties
             </SelectItem>
             <SelectItem value="Easy" className="text-gray-300 focus:text-white focus:bg-white/10">
@@ -130,13 +137,15 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           </SelectContent>
         </Select>
 
-        {/* Sort Options */}
-        <Select value={currentSort} onValueChange={onSortChange}>
+        <Select 
+          value={currentSort || 'default'} 
+          onValueChange={handleSortChange}
+        >
           <SelectTrigger className="bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white focus:border-blue-400">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent className="bg-gray-900/95 border-gray-700 backdrop-blur-xl">
-            <SelectItem value="" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="default" className="text-gray-300 focus:text-white focus:bg-white/10">
               Default Order
             </SelectItem>
             <SelectItem value="name_asc" className="text-gray-300 focus:text-white focus:bg-white/10">
@@ -155,7 +164,6 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
         </Select>
       </div>
 
-      {/* Active filters indicator */}
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2 pt-2 border-t border-white/10">
           {currentSearch && (
@@ -193,8 +201,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           )}
         </div>
       )}
-
-      {/* Search tips */}
+      
       {!hasActiveFilters && (
         <div className="text-xs text-gray-500 pt-2 border-t border-white/10">
           💡 Tip: Search for specific topics like "array", "tree", or "sorting" to find relevant questions

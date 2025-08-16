@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from '../hooks/use-toast';
 import { Bookmark, BookmarkCheck, CheckCircle, Circle, Youtube, Globe } from 'lucide-react';
 
+const BASE_URL = "http://localhost:5703";
+
 interface Question {
   _id: string;
   title: string;
@@ -60,11 +62,18 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   const handleProgressToggle = async () => {
-    if (!token) return;
+    if (!token) {
+      toast({
+        title: "Authentication required",
+        description: "Please login to track your progress.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setLoading(true);
     try {
-      const response = await fetch('/api/v1/user/progress', {
+      const response = await fetch(`${BASE_URL}/api/v1/user/progress`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +86,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update progress');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update progress');
       }
 
       onProgressUpdate?.(question._id);
@@ -88,9 +98,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           : "Great job! Keep up the learning.",
       });
     } catch (error) {
+      console.error('Progress update error:', error);
       toast({
         title: "Failed to update progress",
-        description: "Please try again later.",
+        description: error instanceof Error ? error.message : "Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -99,12 +110,19 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   const handleBookmarkToggle = async () => {
-    if (!token) return;
+    if (!token) {
+      toast({
+        title: "Authentication required",
+        description: "Please login to bookmark questions.",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setLoading(true);
     try {
       const method = isBookmarked ? 'DELETE' : 'POST';
-      const response = await fetch('/api/v1/user/bookmarks', {
+      const response = await fetch(`${BASE_URL}/api/v1/user/bookmarks`, {
         method,
         headers: {
           'Content-Type': 'application/json',
@@ -114,7 +132,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update bookmark');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update bookmark');
       }
 
       onBookmarkUpdate?.(question._id);
@@ -125,9 +144,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
           : "Added to your bookmark collection.",
       });
     } catch (error) {
+      console.error('Bookmark update error:', error);
       toast({
         title: "Failed to update bookmark",
-        description: "Please try again later.",
+        description: error instanceof Error ? error.message : "Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -152,7 +172,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
               </Badge>
             </div>
             
-            {/* Multiple Links */}
             <div className="flex flex-wrap gap-2">
               {question.url && question.url.length > 0 ? (
                 question.url.filter(url => url && url.trim() !== '').map((url, index) => (
@@ -173,7 +192,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             </div>
           </div>
 
-          {/* Action Buttons */}
           {token && (
             <div className="flex items-center space-x-2">
               <Button

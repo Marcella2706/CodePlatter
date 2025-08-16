@@ -21,14 +21,11 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [isDark, setIsDark] = useState(true);
-
-  useEffect(() => {
+  const [isDark, setIsDark] = useState(() => {
     const stored = localStorage.getItem('theme');
-    if (stored) {
-      setIsDark(stored === 'dark');
-    }
-  }, []);
+    if (stored) return stored === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
   useEffect(() => {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
@@ -39,9 +36,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
   }, [isDark]);
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-  };
+  const toggleTheme = () => setIsDark(prev => !prev);
 
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>

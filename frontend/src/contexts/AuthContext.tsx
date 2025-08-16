@@ -48,7 +48,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
       } catch (error) {
-        // Clear invalid stored data
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
@@ -148,7 +147,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         throw new Error(data.message || 'Invalid OTP');
       }
 
-      return data.token; // Return the reset token
+      return data.token; 
     } catch (error) {
       throw error;
     }

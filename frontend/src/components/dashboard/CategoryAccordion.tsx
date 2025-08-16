@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import {Accordion,AccordionContent,AccordionItem,AccordionTrigger} from '@/components/ui/accordion';
 import QuestionCard from './QuestionCard';
-// Remove unused Progress import
+
 
 interface Question {
   _id: string;
@@ -98,7 +93,6 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
                 </div>
                 
                 <div className="flex items-center space-x-4">
-                  {/* Difficulty breakdown */}
                   <div className="hidden md:flex items-center space-x-2 text-xs">
                     {difficultyStats.Easy > 0 && (
                       <span className="flex items-center text-green-400">
@@ -120,7 +114,6 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
                     )}
                   </div>
 
-                  {/* Progress indicator */}
                   <div className="flex items-center space-x-2">
                     <div className="w-20 bg-gray-700 rounded-full h-2">
                       <div
@@ -144,7 +137,6 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
               <div className="space-y-3 pt-2">
                 {category.questions.length > 0 ? (
                   <>
-                    {/* Progress summary for mobile */}
                     <div className="md:hidden bg-white/5 rounded-lg p-3 mb-4">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-sm text-gray-300">Progress</span>

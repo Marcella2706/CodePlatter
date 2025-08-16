@@ -75,7 +75,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="name" className="text-gray-200 dark:text-gray-300">Full Name</Label>
             <div className="relative">
@@ -92,7 +91,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             </div>
           </div>
 
-          {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-200 dark:text-gray-300">Email</Label>
             <div className="relative">
@@ -109,7 +107,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             </div>
           </div>
 
-          {/* Password */}
           <div className="space-y-2">
             <Label htmlFor="password" className="text-gray-200 dark:text-gray-300">Password</Label>
             <div className="relative">
@@ -133,7 +130,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             </div>
           </div>
 
-          {/* Confirm Password */}
           <div className="space-y-2">
             <Label htmlFor="confirmPassword" className="text-gray-200 dark:text-gray-300">Confirm Password</Label>
             <div className="relative">
@@ -157,7 +153,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             </div>
           </div>
 
-          {/* Password Requirements */}
           <div className="space-y-2">
             <div className="text-sm text-gray-400">Password Requirements:</div>
             <div className="space-y-1 text-xs">
@@ -170,7 +165,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             </div>
           </div>
 
-          {/* Submit Button */}
           <Button
             type="submit"
             disabled={loading || password.length < 6 || password !== confirmPassword}
@@ -186,7 +180,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             )}
           </Button>
 
-          {/* Login Link */}
           <div className="text-center text-sm text-gray-400">
             Already have an account?{' '}
             <Link to="/login" className="text-blue-400 hover:text-blue-300 transition-colors">

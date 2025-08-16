@@ -5,6 +5,8 @@ import { toast } from '@/components/hooks/use-toast';
 import { Loader2, Trophy, Target, Calendar, Award } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+const BASE_URL = "http://localhost:5703";
+
 interface Question {
   _id: string;
   title: string;
@@ -38,8 +40,7 @@ const Progress: React.FC = () => {
       if (!token) return;
 
       try {
-        // Fetch detailed progress
-        const progressResponse = await fetch('/api/v1/user/progress/detailed', {
+        const progressResponse = await fetch(`${BASE_URL}/api/v1/user/progress/detailed`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -50,8 +51,7 @@ const Progress: React.FC = () => {
           setCompletedQuestions(progressData.completedQuestions || []);
           setStats(progressData.stats);
         } else {
-          // Fallback to basic progress if detailed endpoint fails
-          const basicProgressResponse = await fetch('/api/v1/user/progress', {
+          const basicProgressResponse = await fetch(`${BASE_URL}/api/v1/user/progress`, {
             headers: {
               'Authorization': `Bearer ${token}`,
             },
@@ -59,20 +59,18 @@ const Progress: React.FC = () => {
           
           if (basicProgressResponse.ok) {
             const basicData = await basicProgressResponse.json();
-            // Create basic stats
             setStats({
               totalCompleted: basicData.totalCompleted || 0,
               easyCompleted: 0,
               mediumCompleted: 0,
               hardCompleted: 0,
-              totalQuestions: 100, // Fallback value
+              totalQuestions: 100, 
               completionPercentage: 0
             });
           }
         }
 
-        // Fetch bookmarks
-        const bookmarksResponse = await fetch('/api/v1/user/bookmarks', {
+        const bookmarksResponse = await fetch(`${BASE_URL}/api/v1/user/bookmarks`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -101,8 +99,7 @@ const Progress: React.FC = () => {
     setCompletedQuestions(prev => 
       prev.filter(cq => cq.questionId._id !== questionId)
     );
-    
-    // Update stats
+
     if (stats) {
       setStats(prev => prev ? {
         ...prev,
@@ -152,7 +149,6 @@ const Progress: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
             Your Progress
@@ -167,7 +163,6 @@ const Progress: React.FC = () => {
           )}
         </div>
 
-        {/* Stats Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card className="bg-white/5 dark:bg-black/10 border-white/10">
@@ -226,7 +221,6 @@ const Progress: React.FC = () => {
           </div>
         )}
 
-        {/* Progress Chart */}
         {stats && (
           <Card className="bg-white/5 dark:bg-black/10 border-white/10 mb-8">
             <CardHeader>
@@ -257,7 +251,6 @@ const Progress: React.FC = () => {
           </Card>
         )}
 
-        {/* Completed Questions List */}
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold text-white flex items-center">
             <Calendar className="w-6 h-6 mr-2" />

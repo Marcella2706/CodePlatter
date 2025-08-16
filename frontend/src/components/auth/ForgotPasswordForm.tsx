@@ -25,10 +25,9 @@ const ForgotPasswordForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(300); 
   const [canResend, setCanResend] = useState(false);
 
-  // Timer effect
   useEffect(() => {
     if (currentStep === 'otp' && timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
@@ -44,7 +43,6 @@ const ForgotPasswordForm: React.FC = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Step 1: Send OTP
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -61,7 +59,6 @@ const ForgotPasswordForm: React.FC = () => {
     }
   };
 
-  // Step 2: Verify OTP
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.length !== 6) {
@@ -81,7 +78,6 @@ const ForgotPasswordForm: React.FC = () => {
     }
   };
 
-  // Step 3: Reset password
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -104,7 +100,6 @@ const ForgotPasswordForm: React.FC = () => {
     }
   };
 
-  // Resend OTP
   const handleResendOTP = async () => {
     setCanResend(false);
     setTimeLeft(300);
@@ -116,7 +111,6 @@ const ForgotPasswordForm: React.FC = () => {
     }
   };
 
-  // Go back
   const handleBack = () => {
     if (currentStep === 'otp') {
       setCurrentStep('email');
@@ -128,7 +122,6 @@ const ForgotPasswordForm: React.FC = () => {
     }
   };
 
-  // Step renderers
   const renderEmailStep = () => (
     <Card className="w-full max-w-md mx-auto bg-white/10 dark:bg-black/20 backdrop-blur-xl border-white/20 dark:border-white/10">
       <CardHeader className="space-y-1 text-center">
@@ -276,7 +269,6 @@ const ForgotPasswordForm: React.FC = () => {
     </Card>
   );
 
-  // Render step
   switch (currentStep) {
     case 'email': return renderEmailStep();
     case 'otp': return renderOTPStep();
