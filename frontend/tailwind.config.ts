@@ -1,22 +1,15 @@
-import type { Config } from "tailwindcss";
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
 
-const config: Config = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+export default defineConfig({
+  plugins: [react(),
+    tailwindcss(),
   ],
-  theme: {
-    extend: {
-      colors: {
-        primary: "#6366f1",   
-        secondary: "#14b8a6", 
-        accent: "#f59e0b",   
-      },
-    },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src")
+    }
   },
-  plugins: [
-    require("tw-animate-css"),
-  ],
-};
-
-export default config;
+})
