@@ -28,7 +28,6 @@ export const seedData=async()=>{
             })
         }
         console.log('Database Seeded!');
-        process.exit();
     }
     catch(err){
         console.error(err)

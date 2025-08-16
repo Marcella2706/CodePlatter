@@ -42,15 +42,22 @@ const dotenv = __importStar(require("dotenv"));
 const db_1 = require("./config/db");
 const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const seeder_1 = require("./utils/seeder");
+const contentRoutes_1 = __importDefault(require("./routes/contentRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 dotenv.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-(0, seeder_1.seedData)();
 app.use('/api/v1/auth', authRoutes_1.default);
-(0, db_1.connectDB)().then(() => {
-    app.listen(process.env.PORT || 5000, () => {
-        console.log(`Server running on port ${process.env.PORT || 5000}`);
+app.use('/api/v1/content', contentRoutes_1.default);
+app.use('/api/v1/user', userRoutes_1.default);
+app.get('/', (req, res) => {
+    res.send('Server is working!');
+});
+(0, db_1.connectDB)().then(async () => {
+    await (0, seeder_1.seedData)();
+    app.listen(process.env.PORT || 5703, () => {
+        console.log(`Server running on port ${process.env.PORT || 5703}`);
     });
 });
 //# sourceMappingURL=server.js.map
