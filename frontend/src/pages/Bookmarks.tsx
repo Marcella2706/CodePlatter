@@ -7,7 +7,7 @@ import { Loader2, BookmarkX } from 'lucide-react';
 interface Question {
   _id: string;
   title: string;
-  url: string;
+  url: string[];
   difficulty: 'Easy' | 'Medium' | 'Hard';
 }
 
@@ -98,6 +98,11 @@ const Bookmarks: React.FC = () => {
           <p className="text-gray-300 text-lg">
             Questions you've saved for later practice
           </p>
+          {bookmarks.length > 0 && (
+            <p className="text-gray-400 text-sm mt-2">
+              {bookmarks.length} bookmark{bookmarks.length !== 1 ? 's' : ''} saved
+            </p>
+          )}
         </div>
 
         {/* Bookmarks List */}

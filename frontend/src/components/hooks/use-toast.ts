@@ -8,7 +8,7 @@ interface ToastProps {
   variant?: ToastVariant;
 }
 
-export const toast = ({ title, description, variant }: ToastProps) => {
+export const toast = ({ title, variant }: ToastProps) => {
   if (variant === "success") {
     return sonnerToast.success(title);
   } else if (variant === "destructive" || variant === "error") {

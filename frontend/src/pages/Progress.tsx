@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import QuestionCard from '@/components/dashboard/QuestionCard';
 import { toast } from '@/components/hooks/use-toast';
-import { Loader2, Trophy, Target, Calendar } from 'lucide-react';
+import { Loader2, Trophy, Target, Calendar, Award } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Question {
   _id: string;
   title: string;
-  url: string;
+  url: string[];
   difficulty: 'Easy' | 'Medium' | 'Hard';
 }
 
@@ -49,6 +49,26 @@ const Progress: React.FC = () => {
           const progressData = await progressResponse.json();
           setCompletedQuestions(progressData.completedQuestions || []);
           setStats(progressData.stats);
+        } else {
+          // Fallback to basic progress if detailed endpoint fails
+          const basicProgressResponse = await fetch('/api/v1/user/progress', {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          
+          if (basicProgressResponse.ok) {
+            const basicData = await basicProgressResponse.json();
+            // Create basic stats
+            setStats({
+              totalCompleted: basicData.totalCompleted || 0,
+              easyCompleted: 0,
+              mediumCompleted: 0,
+              hardCompleted: 0,
+              totalQuestions: 100, // Fallback value
+              completionPercentage: 0
+            });
+          }
         }
 
         // Fetch bookmarks
@@ -60,7 +80,8 @@ const Progress: React.FC = () => {
 
         if (bookmarksResponse.ok) {
           const bookmarksData = await bookmarksResponse.json();
-          setBookmarkedQuestions(bookmarksData.bookmarks?.map((b: any) => b.questionId) || []);
+          const bookmarkIds = bookmarksData.bookmarks?.map((b: any) => b.questionId._id) || [];
+          setBookmarkedQuestions(bookmarkIds);
         }
       } catch (error) {
         toast({
@@ -80,6 +101,17 @@ const Progress: React.FC = () => {
     setCompletedQuestions(prev => 
       prev.filter(cq => cq.questionId._id !== questionId)
     );
+    
+    // Update stats
+    if (stats) {
+      setStats(prev => prev ? {
+        ...prev,
+        totalCompleted: prev.totalCompleted - 1,
+        completionPercentage: prev.totalQuestions > 0 
+          ? ((prev.totalCompleted - 1) / prev.totalQuestions) * 100 
+          : 0
+      } : null);
+    }
   };
 
   const handleBookmarkUpdate = (questionId: string) => {
@@ -88,6 +120,22 @@ const Progress: React.FC = () => {
         ? prev.filter(id => id !== questionId)
         : [...prev, questionId]
     );
+  };
+
+  const getProgressMessage = () => {
+    if (!stats) return '';
+    
+    if (stats.completionPercentage >= 80) {
+      return "🎉 Excellent progress! You're a coding champion!";
+    } else if (stats.completionPercentage >= 50) {
+      return "🚀 Great work! You're halfway there!";
+    } else if (stats.completionPercentage >= 20) {
+      return "💪 Good start! Keep up the momentum!";
+    } else if (stats.totalCompleted > 0) {
+      return "🌟 Nice! Every question solved is progress!";
+    } else {
+      return "💡 Ready to start your coding journey?";
+    }
   };
 
   if (loading) {
@@ -112,6 +160,11 @@ const Progress: React.FC = () => {
           <p className="text-gray-300 text-lg">
             Track your coding journey and achievements
           </p>
+          {stats && (
+            <p className="text-blue-300 text-sm mt-2 font-medium">
+              {getProgressMessage()}
+            </p>
+          )}
         </div>
 
         {/* Stats Cards */}
@@ -193,7 +246,7 @@ const Progress: React.FC = () => {
                 <div className="w-full bg-gray-700 rounded-full h-4">
                   <div
                     className="bg-gradient-to-r from-blue-500 to-purple-500 h-4 rounded-full transition-all duration-500"
-                    style={{ width: `${stats.completionPercentage}%` }}
+                    style={{ width: `${Math.min(stats.completionPercentage, 100)}%` }}
                   />
                 </div>
                 <div className="text-center text-2xl font-bold text-blue-400">
@@ -208,7 +261,7 @@ const Progress: React.FC = () => {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold text-white flex items-center">
             <Calendar className="w-6 h-6 mr-2" />
-            Recently Completed Questions
+            Completed Questions
           </h2>
           
           {completedQuestions.length > 0 ? (
@@ -222,7 +275,8 @@ const Progress: React.FC = () => {
                     onProgressUpdate={handleProgressUpdate}
                     onBookmarkUpdate={handleBookmarkUpdate}
                   />
-                  <div className="text-sm text-gray-400 ml-4">
+                  <div className="text-sm text-gray-400 ml-4 flex items-center">
+                    <Award className="w-3 h-3 mr-1" />
                     Completed on {new Date(cq.completedAt).toLocaleDateString()}
                   </div>
                 </div>
@@ -235,7 +289,7 @@ const Progress: React.FC = () => {
                 No completed questions yet
               </h3>
               <p className="text-gray-400 mb-6">
-                Start solving questions to track your progress
+                Start solving questions to track your progress here
               </p>
               <a
                 href="/dashboard"

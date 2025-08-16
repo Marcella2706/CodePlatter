@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
           <Link to="/dashboard" className="flex items-center space-x-2">
             <BookOpen className="h-8 w-8 text-blue-400" />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              CodeQuest
+              CodePlatter
             </span>
           </Link>
 

@@ -3,12 +3,15 @@ import { useAuth } from '@/contexts/AuthContext';
 import CategoryAccordion from '@/components/dashboard/CategoryAccordion';
 import SearchAndFilter from '@/components/dashboard/SearchAndFilter';
 import { toast } from '@/components/hooks/use-toast';
-import { Loader2, BookOpen } from 'lucide-react';
+import { Loader2, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+const BASE_URL="http://localhost:5703";
 
 interface Question {
   _id: string;
   title: string;
-  url: string;
+  url: string[];
   difficulty: 'Easy' | 'Medium' | 'Hard';
 }
 
@@ -18,17 +21,26 @@ interface Category {
   questions: Question[];
 }
 
+interface PaginationInfo {
+  currentPage: number;
+  totalPages: number;
+  totalCategories: number;
+  limit: number;
+}
+
 const Dashboard: React.FC = () => {
   const { token } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [completedQuestions, setCompletedQuestions] = useState<string[]>([]);
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState<string[]>([]);
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
   
   // Filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [sortBy, setSortBy] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -36,14 +48,21 @@ const Dashboard: React.FC = () => {
       if (searchQuery) params.append('search', searchQuery);
       if (difficultyFilter) params.append('difficulty', difficultyFilter);
       if (sortBy) params.append('sortBy', sortBy);
+      params.append('page', currentPage.toString());
+      params.append('limit', '10');
 
-      const response = await fetch(`/api/v1/content?${params}`);
+      // Fix: Actually use the query parameters in the URL
+      const queryString = params.toString();
+      const url = `${BASE_URL}/api/v1/content/${queryString ? `?${queryString}` : ''}`;
+      
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch categories');
       }
 
       const data = await response.json();
       setCategories(data.categories || []);
+      setPagination(data.pagination || null);
     } catch (error) {
       toast({
         title: "Failed to load questions",
@@ -51,14 +70,15 @@ const Dashboard: React.FC = () => {
         variant: "destructive",
       });
     }
-  }, [searchQuery, difficultyFilter, sortBy]);
+  }, [searchQuery, difficultyFilter, sortBy, currentPage]);
 
   const fetchUserData = useCallback(async () => {
     if (!token) return;
 
     try {
+      // Fix: Use BASE_URL for consistency
       // Fetch user progress
-      const progressResponse = await fetch('/api/v1/user/progress', {
+      const progressResponse = await fetch(`${BASE_URL}/api/v1/user/progress`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -70,7 +90,7 @@ const Dashboard: React.FC = () => {
       }
 
       // Fetch bookmarks
-      const bookmarksResponse = await fetch('/api/v1/user/bookmarks', {
+      const bookmarksResponse = await fetch(`${BASE_URL}/api/v1/user/bookmarks`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -78,7 +98,8 @@ const Dashboard: React.FC = () => {
 
       if (bookmarksResponse.ok) {
         const bookmarksData = await bookmarksResponse.json();
-        setBookmarkedQuestions(bookmarksData.bookmarks?.map((b: any) => b.questionId) || []);
+        const bookmarkIds = bookmarksData.bookmarks?.map((b: any) => b.questionId._id) || [];
+        setBookmarkedQuestions(bookmarkIds);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -94,6 +115,13 @@ const Dashboard: React.FC = () => {
 
     loadData();
   }, [fetchCategories, fetchUserData]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    if (currentPage !== 1) {
+      setCurrentPage(1);
+    }
+  }, [searchQuery, difficultyFilter, sortBy]);
 
   const handleProgressUpdate = (questionId: string) => {
     setCompletedQuestions(prev => 
@@ -111,9 +139,18 @@ const Dashboard: React.FC = () => {
     );
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Fix: Calculate total questions correctly
   const totalQuestions = categories.reduce((sum, category) => sum + category.questions.length, 0);
   const completedCount = completedQuestions.length;
-  const completionPercentage = totalQuestions > 0 ? Math.round((completedCount / totalQuestions) * 100) : 0;
+  
+  // Fix: Use totalQuestions for percentage calculation, not totalCategories
+  const completionPercentage = completedCount > 0 && totalQuestions > 0 
+    ? Math.round((completedCount / totalQuestions) * 100) 
+    : 0;
 
   if (loading) {
     return (
@@ -154,7 +191,7 @@ const Dashboard: React.FC = () => {
               
               <div className="flex justify-between text-sm text-gray-400">
                 <span>{completedCount} completed</span>
-                <span>{totalQuestions} total questions</span>
+                <span>Keep going!</span>
               </div>
             </div>
           )}
@@ -174,13 +211,57 @@ const Dashboard: React.FC = () => {
 
         {/* Categories */}
         {categories.length > 0 ? (
-          <CategoryAccordion
-            categories={categories}
-            completedQuestions={completedQuestions}
-            bookmarkedQuestions={bookmarkedQuestions}
-            onProgressUpdate={handleProgressUpdate}
-            onBookmarkUpdate={handleBookmarkUpdate}
-          />
+          <>
+            <CategoryAccordion
+              categories={categories}
+              completedQuestions={completedQuestions}
+              bookmarkedQuestions={bookmarkedQuestions}
+              onProgressUpdate={handleProgressUpdate}
+              onBookmarkUpdate={handleBookmarkUpdate}
+            />
+            
+            {/* Pagination */}
+            {pagination && pagination.totalPages > 1 && (
+              <div className="flex justify-center items-center space-x-4 mt-8">
+                <Button
+                  variant="outline"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="bg-white/5 border-white/20 text-white hover:bg-white/10"
+                >
+                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  Previous
+                </Button>
+                
+                <div className="flex space-x-2">
+                  {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      onClick={() => handlePageChange(page)}
+                      className={
+                        currentPage === page
+                          ? "bg-blue-600 text-white"
+                          : "bg-white/5 border-white/20 text-white hover:bg-white/10"
+                      }
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === pagination.totalPages}
+                  className="bg-white/5 border-white/20 text-white hover:bg-white/10"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="text-center py-16">
             <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />

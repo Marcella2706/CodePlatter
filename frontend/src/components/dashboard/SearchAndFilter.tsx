@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, Filter, X, Loader2 } from 'lucide-react';
 
 interface SearchAndFilterProps {
   onSearchChange: (search: string) => void;
@@ -28,21 +28,33 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   currentSort,
 }) => {
   const [searchInput, setSearchInput] = useState(currentSearch);
-  const [debouncedSearch, setDebouncedSearch] = useState(currentSearch);
+  const [isSearching, setIsSearching] = useState(false);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // Debounce search input
+  // Debounced search with 300ms delay
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(searchInput);
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    setIsSearching(true);
+    
+    debounceTimer.current = setTimeout(() => {
+      onSearchChange(searchInput);
+      setIsSearching(false);
     }, 300);
 
-    return () => clearTimeout(timer);
-  }, [searchInput]);
+    return () => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+    };
+  }, [searchInput, onSearchChange]);
 
-  // Update parent when debounced search changes
+  // Update local search input when external search changes
   useEffect(() => {
-    onSearchChange(debouncedSearch);
-  }, [debouncedSearch, onSearchChange]);
+    setSearchInput(currentSearch);
+  }, [currentSearch]);
 
   const clearFilters = () => {
     setSearchInput('');
@@ -68,20 +80,23 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
             className="text-gray-400 hover:text-white hover:bg-white/10"
           >
             <X className="w-4 h-4 mr-1" />
-            Clear
+            Clear All
           </Button>
         )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Search Input */}
+        {/* Search Input with debouncing indicator */}
         <div className="relative">
           <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          {isSearching && (
+            <Loader2 className="absolute right-3 top-3 h-4 w-4 text-blue-400 animate-spin" />
+          )}
           <Input
             placeholder="Search questions..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-10 bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+            className="pl-10 pr-10 bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
           />
         </div>
 
@@ -95,13 +110,22 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
               All Difficulties
             </SelectItem>
             <SelectItem value="Easy" className="text-gray-300 focus:text-white focus:bg-white/10">
-              Easy
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                Easy
+              </div>
             </SelectItem>
             <SelectItem value="Medium" className="text-gray-300 focus:text-white focus:bg-white/10">
-              Medium
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                Medium
+              </div>
             </SelectItem>
             <SelectItem value="Hard" className="text-gray-300 focus:text-white focus:bg-white/10">
-              Hard
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                Hard
+              </div>
             </SelectItem>
           </SelectContent>
         </Select>
@@ -116,10 +140,10 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
               Default Order
             </SelectItem>
             <SelectItem value="name_asc" className="text-gray-300 focus:text-white focus:bg-white/10">
-              Name (A-Z)
+              Name (A → Z)
             </SelectItem>
             <SelectItem value="name_desc" className="text-gray-300 focus:text-white focus:bg-white/10">
-              Name (Z-A)
+              Name (Z → A)
             </SelectItem>
             <SelectItem value="difficulty_asc" className="text-gray-300 focus:text-white focus:bg-white/10">
               Difficulty (Easy → Hard)
@@ -137,18 +161,43 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           {currentSearch && (
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30">
               Search: "{currentSearch}"
+              <button
+                onClick={() => setSearchInput('')}
+                className="ml-1 hover:text-blue-200"
+              >
+                <X className="w-3 h-3" />
+              </button>
             </span>
           )}
           {currentDifficulty && (
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-600/20 text-purple-300 border border-purple-500/30">
               Difficulty: {currentDifficulty}
+              <button
+                onClick={() => onDifficultyChange('')}
+                className="ml-1 hover:text-purple-200"
+              >
+                <X className="w-3 h-3" />
+              </button>
             </span>
           )}
           {currentSort && (
             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-600/20 text-green-300 border border-green-500/30">
               Sort: {currentSort.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              <button
+                onClick={() => onSortChange('')}
+                className="ml-1 hover:text-green-200"
+              >
+                <X className="w-3 h-3" />
+              </button>
             </span>
           )}
+        </div>
+      )}
+
+      {/* Search tips */}
+      {!hasActiveFilters && (
+        <div className="text-xs text-gray-500 pt-2 border-t border-white/10">
+          💡 Tip: Search for specific topics like "array", "tree", or "sorting" to find relevant questions
         </div>
       )}
     </div>

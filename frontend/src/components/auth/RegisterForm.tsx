@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/components/hooks/use-toast';
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface RegisterFormProps {
@@ -24,7 +24,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (password !== confirmPassword) {
       toast({
         title: "Passwords don't match",
@@ -44,7 +44,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
     }
 
     setLoading(true);
-
     try {
       await register(name, email, password);
       toast({
@@ -52,10 +51,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
         description: "Your account has been created successfully.",
       });
       onSuccess?.();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Registration failed",
-        description: "Please check your information and try again.",
+        description: error.message || "Please check your information and try again.",
         variant: "destructive",
       });
     } finally {
@@ -67,7 +66,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
     <Card className="w-full max-w-md mx-auto bg-white/10 dark:bg-black/20 backdrop-blur-xl border-white/20 dark:border-white/10">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-          Join CodeQuest
+          Join CodePlatter
         </CardTitle>
         <CardDescription className="text-gray-300 dark:text-gray-400">
           Create your account to start coding
@@ -75,10 +74,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/* Name */}
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-gray-200 dark:text-gray-300">
-              Full Name
-            </Label>
+            <Label htmlFor="name" className="text-gray-200 dark:text-gray-300">Full Name</Label>
             <div className="relative">
               <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -86,17 +85,16 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
                 type="text"
                 placeholder="Enter your full name"
                 value={name}
-                onChange={(e:any) => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
                 required
                 className="pl-10 bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
             </div>
           </div>
 
+          {/* Email */}
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-200 dark:text-gray-300">
-              Email
-            </Label>
+            <Label htmlFor="email" className="text-gray-200 dark:text-gray-300">Email</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -110,11 +108,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
               />
             </div>
           </div>
-          
+
+          {/* Password */}
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-gray-200 dark:text-gray-300">
-              Password
-            </Label>
+            <Label htmlFor="password" className="text-gray-200 dark:text-gray-300">Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -136,10 +133,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             </div>
           </div>
 
+          {/* Confirm Password */}
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword" className="text-gray-200 dark:text-gray-300">
-              Confirm Password
-            </Label>
+            <Label htmlFor="confirmPassword" className="text-gray-200 dark:text-gray-300">Confirm Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -161,9 +157,23 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             </div>
           </div>
 
+          {/* Password Requirements */}
+          <div className="space-y-2">
+            <div className="text-sm text-gray-400">Password Requirements:</div>
+            <div className="space-y-1 text-xs">
+              <div className={`flex items-center ${password.length >= 6 ? 'text-green-400' : 'text-gray-500'}`}>
+                <CheckCircle className="w-3 h-3 mr-1" /> At least 6 characters
+              </div>
+              <div className={`flex items-center ${password === confirmPassword && password ? 'text-green-400' : 'text-gray-500'}`}>
+                <CheckCircle className="w-3 h-3 mr-1" /> Passwords match
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
           <Button
             type="submit"
-            disabled={loading}
+            disabled={loading || password.length < 6 || password !== confirmPassword}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105"
           >
             {loading ? (
@@ -176,12 +186,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             )}
           </Button>
 
+          {/* Login Link */}
           <div className="text-center text-sm text-gray-400">
             Already have an account?{' '}
             <Link to="/login" className="text-blue-400 hover:text-blue-300 transition-colors">
               Sign in
             </Link>
           </div>
+
         </form>
       </CardContent>
     </Card>

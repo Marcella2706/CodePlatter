@@ -6,11 +6,12 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import QuestionCard from './QuestionCard';
+// Remove unused Progress import
 
 interface Question {
   _id: string;
   title: string;
-  url: string;
+  url: string[];
   difficulty: 'Easy' | 'Medium' | 'Hard';
 }
 
@@ -35,6 +36,36 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
   onProgressUpdate,
   onBookmarkUpdate,
 }) => {
+  const getDifficultyStats = (questions: Question[]) => {
+    const stats = {
+      Easy: 0,
+      Medium: 0,
+      Hard: 0
+    };
+    
+    questions.forEach(q => {
+      stats[q.difficulty]++;
+    });
+    
+    return stats;
+  };
+
+  const getDifficultyCompletionStats = (questions: Question[], completed: string[]) => {
+    const stats = {
+      Easy: 0,
+      Medium: 0,
+      Hard: 0
+    };
+    
+    questions.forEach(q => {
+      if (completed.includes(q._id)) {
+        stats[q.difficulty]++;
+      }
+    });
+    
+    return stats;
+  };
+
   return (
     <Accordion type="multiple" className="w-full space-y-4">
       {categories.map((category) => {
@@ -45,6 +76,9 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
         const completionPercentage = totalQuestions > 0 
           ? Math.round((completedCount / totalQuestions) * 100) 
           : 0;
+
+        const difficultyStats = getDifficultyStats(category.questions);
+        const difficultyCompletionStats = getDifficultyCompletionStats(category.questions, completedQuestions);
 
         return (
           <AccordionItem
@@ -59,14 +93,36 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
                     {category.title}
                   </h3>
                   <span className="text-sm text-gray-400">
-                    ({totalQuestions} questions)
+                    ({totalQuestions} question{totalQuestions !== 1 ? 's' : ''})
                   </span>
                 </div>
                 
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
+                  {/* Difficulty breakdown */}
+                  <div className="hidden md:flex items-center space-x-2 text-xs">
+                    {difficultyStats.Easy > 0 && (
+                      <span className="flex items-center text-green-400">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+                        {difficultyCompletionStats.Easy}/{difficultyStats.Easy}
+                      </span>
+                    )}
+                    {difficultyStats.Medium > 0 && (
+                      <span className="flex items-center text-yellow-400">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full mr-1"></div>
+                        {difficultyCompletionStats.Medium}/{difficultyStats.Medium}
+                      </span>
+                    )}
+                    {difficultyStats.Hard > 0 && (
+                      <span className="flex items-center text-red-400">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mr-1"></div>
+                        {difficultyCompletionStats.Hard}/{difficultyStats.Hard}
+                      </span>
+                    )}
+                  </div>
+
                   {/* Progress indicator */}
                   <div className="flex items-center space-x-2">
-                    <div className="w-16 bg-gray-700 rounded-full h-2">
+                    <div className="w-20 bg-gray-700 rounded-full h-2">
                       <div
                         className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${completionPercentage}%` }}
@@ -86,20 +142,54 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
             
             <AccordionContent className="px-6 pb-4">
               <div className="space-y-3 pt-2">
-                {category.questions.map((question) => (
-                  <QuestionCard
-                    key={question._id}
-                    question={question}
-                    isCompleted={completedQuestions.includes(question._id)}
-                    isBookmarked={bookmarkedQuestions.includes(question._id)}
-                    onProgressUpdate={onProgressUpdate}
-                    onBookmarkUpdate={onBookmarkUpdate}
-                  />
-                ))}
-                
-                {category.questions.length === 0 && (
+                {category.questions.length > 0 ? (
+                  <>
+                    {/* Progress summary for mobile */}
+                    <div className="md:hidden bg-white/5 rounded-lg p-3 mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-gray-300">Progress</span>
+                        <span className="text-sm text-blue-400 font-medium">
+                          {completedCount}/{totalQuestions}
+                        </span>
+                      </div>
+                      <div className="flex space-x-4 text-xs">
+                        {difficultyStats.Easy > 0 && (
+                          <span className="flex items-center text-green-400">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mr-1"></div>
+                            Easy: {difficultyCompletionStats.Easy}/{difficultyStats.Easy}
+                          </span>
+                        )}
+                        {difficultyStats.Medium > 0 && (
+                          <span className="flex items-center text-yellow-400">
+                            <div className="w-2 h-2 bg-yellow-500 rounded-full mr-1"></div>
+                            Medium: {difficultyCompletionStats.Medium}/{difficultyStats.Medium}
+                          </span>
+                        )}
+                        {difficultyStats.Hard > 0 && (
+                          <span className="flex items-center text-red-400">
+                            <div className="w-2 h-2 bg-red-500 rounded-full mr-1"></div>
+                            Hard: {difficultyCompletionStats.Hard}/{difficultyStats.Hard}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {category.questions.map((question) => (
+                      <QuestionCard
+                        key={question._id}
+                        question={question}
+                        isCompleted={completedQuestions.includes(question._id)}
+                        isBookmarked={bookmarkedQuestions.includes(question._id)}
+                        onProgressUpdate={onProgressUpdate}
+                        onBookmarkUpdate={onBookmarkUpdate}
+                      />
+                    ))}
+                  </>
+                ) : (
                   <div className="text-center py-8 text-gray-400">
-                    No questions in this category yet.
+                    <div className="text-4xl mb-2">📝</div>
+                    <p>No questions in this category yet.</p>
+                    <p className="text-sm mt-1">Check back later for new content!</p>
                   </div>
                 )}
               </div>

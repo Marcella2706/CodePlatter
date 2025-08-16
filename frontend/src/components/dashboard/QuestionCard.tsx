@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '../hooks/use-toast';
-import { ExternalLink, Bookmark, BookmarkCheck, CheckCircle, Circle } from 'lucide-react';
+import { Bookmark, BookmarkCheck, CheckCircle, Circle, Youtube, Globe } from 'lucide-react';
 
 interface Question {
   _id: string;
   title: string;
-  url: string;
+  url: string[];
   difficulty: 'Easy' | 'Medium' | 'Hard';
 }
 
@@ -42,6 +42,21 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       default:
         return 'bg-gray-600 hover:bg-gray-700';
     }
+  };
+
+  const getLinkIcon = (url: string) => {
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      return <Youtube className="w-3 h-3 mr-1" />;
+    }
+    return <Globe className="w-3 h-3 mr-1" />;
+  };
+
+  const getLinkText = (url: string, index: number) => {
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      return 'Watch Tutorial';
+    }
+    if (index === 0) return 'View Problem';
+    return `Link ${index + 1}`;
   };
 
   const handleProgressToggle = async () => {
@@ -125,26 +140,36 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
       <CardContent className="p-4">
         <div className="flex items-start justify-between space-x-4">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2 mb-2">
+            <div className="flex items-center space-x-2 mb-3">
               <h3 className="font-medium text-white group-hover:text-blue-300 transition-colors line-clamp-2">
                 {question.title}
               </h3>
             </div>
             
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center flex-wrap gap-2 mb-2">
               <Badge className={`${getDifficultyColor(question.difficulty)} text-white border-0`}>
                 {question.difficulty}
               </Badge>
-              
-              <a
-                href={question.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
-              >
-                <ExternalLink className="w-3 h-3 mr-1" />
-                View Problem
-              </a>
+            </div>
+            
+            {/* Multiple Links */}
+            <div className="flex flex-wrap gap-2">
+              {question.url && question.url.length > 0 ? (
+                question.url.filter(url => url && url.trim() !== '').map((url, index) => (
+                  <a
+                    key={index}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors bg-blue-600/10 hover:bg-blue-600/20 px-2 py-1 rounded"
+                  >
+                    {getLinkIcon(url)}
+                    {getLinkText(url, index)}
+                  </a>
+                ))
+              ) : (
+                <span className="text-sm text-gray-500">No links available</span>
+              )}
             </div>
           </div>
 
@@ -161,6 +186,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                     ? 'text-green-400 hover:text-green-300' 
                     : 'text-gray-400 hover:text-white'
                 } hover:bg-white/10`}
+                title={isCompleted ? "Mark as incomplete" : "Mark as completed"}
               >
                 {isCompleted ? (
                   <CheckCircle className="h-4 w-4" />
@@ -179,6 +205,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                     ? 'text-yellow-400 hover:text-yellow-300' 
                     : 'text-gray-400 hover:text-white'
                 } hover:bg-white/10`}
+                title={isBookmarked ? "Remove bookmark" : "Add bookmark"}
               >
                 {isBookmarked ? (
                   <BookmarkCheck className="h-4 w-4" />
