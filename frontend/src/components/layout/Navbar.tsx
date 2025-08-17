@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
-import { Sun, Moon, User, LogOut, BookOpen, Settings, Menu, X } from 'lucide-react';
+import { Sun, Moon, User, LogOut, BookOpen, Settings, Menu, X, Mail } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   DropdownMenu,
@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/');
     setMobileMenuOpen(false);
   };
 
@@ -48,6 +48,7 @@ const Navbar: React.FC = () => {
     { path: '/dashboard', label: 'Questions', icon: BookOpen },
     { path: '/progress', label: 'Progress', icon: BookOpen },
     { path: '/bookmarks', label: 'Bookmarks', icon: BookOpen },
+    { path: '/contact', label: 'Contact Us', icon: Mail }, // ✅ new Contact link
   ];
 
   return (
@@ -164,6 +165,14 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <div className="flex items-center space-x-3">
+                <Link to="/contact">
+                  <Button 
+                    variant="ghost"
+                    className="text-blue-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
+                  >
+                    Contact Us
+                  </Button>
+                </Link>
                 <Link to="/login">
                   <Button 
                     variant="ghost" 

@@ -3,3 +3,210 @@
 
 @custom-variant dark (&:is(.dark *));
 @custom-variant light (&:is(.light *));
+
+/* Landing page specific animations - scoped to .landing-page class */
+
+/* Keyframes for landing page */
+@keyframes landing-fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes landing-slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes landing-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes landing-slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes landing-slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes landing-scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes landing-bounceGentle {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes landing-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes landing-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+  }
+}
+
+@keyframes landing-pulseGentle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes landing-gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Landing page scoped animation classes */
+.landing-page .animate-fade-in {
+  animation: landing-fadeIn 0.8s ease-out forwards;
+}
+
+.landing-page .animate-slide-up {
+  animation: landing-slideUp 0.8s ease-out forwards;
+}
+
+.landing-page .animate-slide-down {
+  animation: landing-slideDown 0.8s ease-out forwards;
+}
+
+.landing-page .animate-slide-left {
+  animation: landing-slideLeft 0.8s ease-out forwards;
+}
+
+.landing-page .animate-slide-right {
+  animation: landing-slideRight 0.8s ease-out forwards;
+}
+
+.landing-page .animate-scale-in {
+  animation: landing-scaleIn 0.6s ease-out forwards;
+}
+
+.landing-page .animate-bounce-gentle {
+  animation: landing-bounceGentle 2s infinite;
+}
+
+.landing-page .animate-float {
+  animation: landing-float 3s ease-in-out infinite;
+}
+
+.landing-page .animate-glow {
+  animation: landing-glow 2s ease-in-out infinite;
+}
+
+.landing-page .animate-pulse-gentle {
+  animation: landing-pulseGentle 2s ease-in-out infinite;
+}
+
+.landing-page .animate-gradient {
+  background-size: 200% 200%;
+  animation: landing-gradientShift 3s ease infinite;
+}
+
+/* Landing page stagger animations */
+.landing-page .animate-stagger-1 {
+  animation-delay: 100ms;
+}
+
+.landing-page .animate-stagger-2 {
+  animation-delay: 200ms;
+}
+
+.landing-page .animate-stagger-3 {
+  animation-delay: 300ms;
+}
+
+.landing-page .animate-stagger-4 {
+  animation-delay: 400ms;
+}
+
+.landing-page .animate-stagger-5 {
+  animation-delay: 500ms;
+}
+
+.landing-page .animate-stagger-6 {
+  animation-delay: 600ms;
+}
+
+/* Landing page interactive hover effects */
+.landing-page .interactive-hover {
+  transition: all 0.3s ease;
+}
+
+.landing-page .interactive-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Landing page glass morphism effect */
+.landing-page .glass-morphism {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}

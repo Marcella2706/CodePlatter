@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Navbar from "@/components/layout/Navbar";
+import Landing from "./pages/Landing";
+import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -68,16 +70,17 @@ const AppRoutes = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black transition-colors duration-300 flex flex-col">
       <Navbar />
-      <main className="animate-fade-in">
+      <main className="animate-fade-in flex-grow">
         <Routes>
           <Route 
             path="/" 
             element={
-              user ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
+              user ? <Navigate to="/dashboard" replace /> : <Landing />
             } 
           />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
