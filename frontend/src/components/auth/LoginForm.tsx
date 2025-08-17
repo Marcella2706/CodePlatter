@@ -42,19 +42,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-white/10 dark:bg-black/20 backdrop-blur-xl border-white/20 dark:border-white/10">
+    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Welcome Back
         </CardTitle>
-        <CardDescription className="text-gray-300 dark:text-gray-400">
+        <CardDescription className="text-gray-400">
           Sign in to your account to continue
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-200 dark:text-gray-300">
+            <Label htmlFor="email" className="text-gray-200">
               Email
             </Label>
             <div className="relative">
@@ -66,13 +66,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10 bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
             </div>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-gray-200 dark:text-gray-300">
+            <Label htmlFor="password" className="text-gray-200">
               Password
             </Label>
             <div className="relative">
@@ -84,7 +84,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pl-10 pr-10 bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
               <button
                 type="button"
@@ -108,7 +108,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-blue-700 to-purple-700 hover:from-blue-800 hover:to-purple-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200 transform hover:scale-105"
           >
             {loading ? (
               <div className="flex items-center justify-center">

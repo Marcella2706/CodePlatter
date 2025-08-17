@@ -4,7 +4,6 @@ import QuestionCard from '@/components/dashboard/QuestionCard';
 import { toast } from '@/components/hooks/use-toast';
 import { Loader2, BookmarkX } from 'lucide-react';
 
-
 const BASE_URL = "http://localhost:5703";
 
 interface Question {
@@ -78,7 +77,7 @@ const Bookmarks: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-12 w-12 animate-spin text-blue-400 mx-auto mb-4" />
           <p className="text-gray-300">Loading bookmarks...</p>
@@ -88,7 +87,7 @@ const Bookmarks: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
@@ -128,7 +127,7 @@ const Bookmarks: React.FC = () => {
             </p>
             <a
               href="/dashboard"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105"
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-700 to-purple-700 hover:from-blue-800 hover:to-purple-800 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105"
             >
               Browse Questions
             </a>

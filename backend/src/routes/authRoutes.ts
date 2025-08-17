@@ -11,7 +11,8 @@ dotenv.config();
 
 const router = Router();
 
-const otpStore = new Map<string, { otp: string; expiresAt: number }>();
+// Store both password reset OTPs and registration OTPs
+const otpStore = new Map<string, { otp: string; expiresAt: number; type: 'reset' | 'register'; userData?: any }>();
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -29,6 +30,141 @@ const limiter = rateLimit({
     legacyHeaders: false,
 });
 
+// Registration OTP endpoint
+router.post('/register-otp', limiter, async(req, res) => {
+    try{
+        const {name, email, password} = req.body;
+
+        if(!name || !email || !password){
+            return res.status(400).json({ 
+                message: 'Name, email, and password are required' 
+            });
+        }
+
+        // Check if user already exists
+        const existingUser = await User.findOne({email});
+        if(existingUser){
+            return res.status(400).json({ 
+                message: 'User already exists with this email' 
+            });
+        }
+
+        // Generate OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // Store OTP with user data for later registration
+        otpStore.set(email, {
+            otp, 
+            expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes
+            type: 'register',
+            userData: { name, email, password }
+        });
+
+        // Send OTP email
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'CodePlatter - Verify Your Email',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #3B82F6;">Welcome to CodePlatter!</h2>
+                    <p>Thank you for joining CodePlatter. Please verify your email address to complete your registration.</p>
+                    <div style="background-color: #F3F4F6; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+                        <h3 style="margin: 0; color: #1F2937;">Your Verification Code</h3>
+                        <p style="font-size: 32px; font-weight: bold; color: #3B82F6; margin: 10px 0; letter-spacing: 4px;">${otp}</p>
+                        <p style="margin: 0; color: #6B7280; font-size: 14px;">This code expires in 5 minutes</p>
+                    </div>
+                    <p>If you didn't request this, please ignore this email.</p>
+                    <p>Happy coding!<br>The CodePlatter Team</p>
+                </div>
+            `
+        });
+
+        res.json({message: 'Verification code sent to your email'});
+    } catch (error) {
+        console.error('Registration OTP error:', error);
+        res.status(500).json({message: 'Error sending verification code'});
+    }
+});
+
+// Verify registration OTP and complete registration
+router.post('/verify-register-otp', limiter, async(req, res) => {
+    try {
+        const {name, email, password, otp} = req.body;
+
+        if(!name || !email || !password || !otp) {
+            return res.status(400).json({
+                message: 'Name, email, password, and OTP are required'
+            });
+        }
+
+        const record = otpStore.get(email);
+
+        if (!record || record.type !== 'register') {
+            return res.status(400).json({message: 'No registration OTP found for this email'});
+        }
+
+        if (Date.now() > record.expiresAt) {
+            otpStore.delete(email);
+            return res.status(400).json({message: 'OTP expired'});
+        }
+
+        if (record.otp !== otp) {
+            return res.status(400).json({message: 'Invalid OTP'});
+        }
+
+        // Verify the registration data matches what was originally sent
+        const { userData } = record;
+        if (!userData || userData.email !== email || userData.name !== name) {
+            return res.status(400).json({message: 'Registration data mismatch'});
+        }
+
+        // Check again if user exists (in case they registered while OTP was pending)
+        const existingUser = await User.findOne({email});
+        if(existingUser){
+            otpStore.delete(email);
+            return res.status(400).json({ 
+                message: 'User already exists with this email' 
+            });
+        }
+
+        // Hash password and create user
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({ 
+            name, 
+            email, 
+            password: hashedPassword 
+        });
+
+        // Generate JWT token
+        const token = jwt.sign(
+            {id: user._id}, 
+            process.env.JWT_SECRET as string, 
+            {expiresIn: '1d'}
+        );
+
+        // Clean up OTP
+        otpStore.delete(email);
+
+        const userResponse = {
+            _id: user._id,
+            name: user.name,
+            email: user.email
+        };
+
+        res.status(201).json({ 
+            message: 'Registration successful',
+            token,
+            user: userResponse 
+        });
+
+    } catch (error) {
+        console.error('Registration verification error:', error);
+        res.status(500).json({message: 'Error completing registration'});
+    }
+});
+
+// Original registration endpoint (keep for backward compatibility or direct registration)
 router.post('/register', limiter, async(req, res)=>{
     try{
         const {name,email,password }=req.body;
@@ -171,6 +307,7 @@ router.put('/update-password',authMiddleware,async(req:any,res:Response)=>{
     }
 });
 
+// Password reset OTP (existing functionality)
 router.post('/forgot-password', async (req, res) => {
     try {
         const {email} = req.body;
@@ -178,13 +315,29 @@ router.post('/forgot-password', async (req, res) => {
         if (!user) return res.status(404).json({message: 'User not found'});
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString(); 
-        otpStore.set(email, {otp, expiresAt: Date.now() + 5 * 60 * 1000}); 
+        otpStore.set(email, {
+            otp, 
+            expiresAt: Date.now() + 5 * 60 * 1000,
+            type: 'reset'
+        }); 
 
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
-            subject: 'Password Reset OTP',
-            text: `Your OTP is: ${otp}. It expires in 5 minutes.`
+            subject: 'CodePlatter - Password Reset OTP',
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h2 style="color: #3B82F6;">Password Reset Request</h2>
+                    <p>You requested to reset your password for your CodePlatter account.</p>
+                    <div style="background-color: #F3F4F6; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
+                        <h3 style="margin: 0; color: #1F2937;">Your Reset Code</h3>
+                        <p style="font-size: 32px; font-weight: bold; color: #3B82F6; margin: 10px 0; letter-spacing: 4px;">${otp}</p>
+                        <p style="margin: 0; color: #6B7280; font-size: 14px;">This code expires in 5 minutes</p>
+                    </div>
+                    <p>If you didn't request this, please ignore this email.</p>
+                    <p>Best regards,<br>The CodePlatter Team</p>
+                </div>
+            `
         });
 
         res.json({message: 'OTP sent to email'});
@@ -198,7 +351,7 @@ router.post('/verify-otp', (req, res) => {
     const {email, otp} = req.body;
     const record = otpStore.get(email);
 
-    if (!record) return res.status(400).json({message: 'No OTP found for this email'});
+    if (!record || record.type !== 'reset') return res.status(400).json({message: 'No password reset OTP found for this email'});
     if (Date.now() > record.expiresAt) {
         otpStore.delete(email);
         return res.status(400).json({message: 'OTP expired'});

@@ -13,6 +13,8 @@ interface AuthContextType {
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  sendRegistrationOTP: (name: string, email: string, password: string) => Promise<void>;
+  verifyRegistrationOTP: (name: string, email: string, password: string, otp: string) => Promise<void>;
   logout: () => void;
   forgotPassword: (email: string) => Promise<void>;
   verifyOTP: (email: string, otp: string) => Promise<string>; 
@@ -102,6 +104,56 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const sendRegistrationOTP = async (name: string, email: string, password: string) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/v1/auth/register-otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send registration OTP');
+      }
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const verifyRegistrationOTP = async (name: string, email: string, password: string, otp: string) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/v1/auth/verify-register-otp`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password, otp }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'OTP verification failed');
+      }
+
+      // Auto-login after successful registration
+      setToken(data.token);
+      setUser(data.user);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -180,6 +232,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     token,
     login,
     register,
+    sendRegistrationOTP,
+    verifyRegistrationOTP,
     logout,
     forgotPassword,
     verifyOTP,

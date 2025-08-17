@@ -14,7 +14,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center p-4">
       <div className="text-center max-w-md">
         <AlertTriangle className="h-20 w-20 text-yellow-400 mx-auto mb-6" />
         <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
@@ -26,7 +26,7 @@ const NotFound = () => {
         </p>
         <Button 
           onClick={() => window.location.href = '/'}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105"
+          className="bg-gradient-to-r from-blue-700 to-purple-700 hover:from-blue-800 hover:to-purple-800 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105"
         >
           <Home className="w-4 h-4 mr-2" />
           Return Home
