@@ -74,7 +74,6 @@ const Dashboard: React.FC = () => {
     if (!token) return;
 
     try {
-      // Load progress
       const progressResponse = await fetch(`${BASE_URL}/api/v1/user/progress`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
@@ -84,7 +83,6 @@ const Dashboard: React.FC = () => {
         setCompletedQuestions(progressData.completedQuestions || []);
       }
 
-      // Load bookmarks
       const bookmarksResponse = await fetch(`${BASE_URL}/api/v1/user/bookmarks`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
