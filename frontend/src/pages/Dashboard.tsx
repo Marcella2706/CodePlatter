@@ -2,8 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import CategoryAccordion from '@/components/dashboard/CategoryAccordion';
 import SearchAndFilter from '@/components/dashboard/SearchAndFilter';
+import Pagination from '@/components/dashboard/Pagination';
+import VoiceCommands from '@/components/dashboard/VoicCommands';
 import { toast } from '@/components/hooks/use-toast';
-import { Loader2, BookOpen } from 'lucide-react';
+import { Loader2, BookOpen, Mic } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const BASE_URL = "http://localhost:5703";
 
@@ -20,6 +23,18 @@ interface Category {
   questions: Question[];
 }
 
+interface PaginationData {
+  currentPage: number;
+  totalPages: number;
+  totalCategories: number;
+  limit: number;
+}
+
+interface StatsData {
+  totalQuestions: number;
+  totalFilteredCategories: number;
+}
+
 const Dashboard: React.FC = () => {
   const { token } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -27,10 +42,28 @@ const Dashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [completedQuestions, setCompletedQuestions] = useState<string[]>([]);
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState<string[]>([]);
+  
+  // Pagination state
+  const [pagination, setPagination] = useState<PaginationData>({
+    currentPage: 1,
+    totalPages: 1,
+    totalCategories: 0,
+    limit: 10,
+  });
+  
+  const [stats, setStats] = useState<StatsData>({
+    totalQuestions: 0,
+    totalFilteredCategories: 0,
+  });
  
+  // Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [sortBy, setSortBy] = useState('');
+
+  // Voice commands state
+  const [showVoiceCommands, setShowVoiceCommands] = useState(false);
+  const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
 
   const loadCategories = useCallback(async () => {
     try {
@@ -42,6 +75,8 @@ const Dashboard: React.FC = () => {
       if (searchQuery.trim()) params.append('search', searchQuery.trim());
       if (difficultyFilter) params.append('difficulty', difficultyFilter);
       if (sortBy) params.append('sortBy', sortBy);
+      params.append('page', pagination.currentPage.toString());
+      params.append('limit', pagination.limit.toString());
       
       const url = `${BASE_URL}/api/v1/content${params.toString() ? `?${params.toString()}` : ''}`;
       console.log('Fetching categories with URL:', url);
@@ -54,7 +89,26 @@ const Dashboard: React.FC = () => {
       
       const categoryData = await categoryResponse.json();
       console.log('Categories received:', categoryData);
+      
       setCategories(categoryData.categories || []);
+      
+      // Update pagination data
+      if (categoryData.pagination) {
+        setPagination({
+          currentPage: categoryData.pagination.currentPage,
+          totalPages: categoryData.pagination.totalPages,
+          totalCategories: categoryData.pagination.totalCategories,
+          limit: categoryData.pagination.limit,
+        });
+      }
+      
+      // Update stats
+      if (categoryData.stats) {
+        setStats({
+          totalQuestions: categoryData.stats.totalQuestions,
+          totalFilteredCategories: categoryData.stats.totalFilteredCategories,
+        });
+      }
       
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -68,7 +122,7 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchQuery, difficultyFilter, sortBy]);
+  }, [searchQuery, difficultyFilter, sortBy, pagination.currentPage, pagination.limit]);
 
   const loadUserData = useCallback(async () => {
     if (!token) return;
@@ -99,7 +153,7 @@ const Dashboard: React.FC = () => {
     }
   }, [token]);
 
-  // Load categories when search/filter changes
+  // Load categories when filters or pagination changes
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
@@ -108,6 +162,13 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     loadUserData();
   }, [loadUserData]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    if (pagination.currentPage !== 1) {
+      setPagination(prev => ({ ...prev, currentPage: 1 }));
+    }
+  }, [searchQuery, difficultyFilter, sortBy]);
 
   const handleProgressUpdate = (questionId: string) => {
     setCompletedQuestions(prev => 
@@ -125,10 +186,44 @@ const Dashboard: React.FC = () => {
     );
   };
 
+  const handlePageChange = (page: number) => {
+    setPagination(prev => ({ ...prev, currentPage: page }));
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleItemsPerPageChange = (limit: number) => {
+    setPagination(prev => ({ 
+      ...prev, 
+      limit, 
+      currentPage: 1 // Reset to first page when changing page size
+    }));
+  };
+
+  // Voice command handlers
+  const handleCategoryOpen = (categoryId: string) => {
+    setOpenCategoryId(categoryId);
+    // Auto-scroll to the category
+    setTimeout(() => {
+      const element = document.querySelector(`[data-category-id="${categoryId}"]`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+  };
+
+  const handleVoiceSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleVoiceDifficultyFilter = (difficulty: string) => {
+    setDifficultyFilter(difficulty);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center animate-fade-in">
           <Loader2 className="h-12 w-12 animate-spin text-blue-400 mx-auto mb-4" />
           <p className="text-gray-300">Loading questions...</p>
           <p className="text-gray-500 text-sm mt-2">Connecting to {BASE_URL}</p>
@@ -140,13 +235,13 @@ const Dashboard: React.FC = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
-        <div className="text-center max-w-md p-6">
-          <div className="text-red-400 text-4xl mb-4">⚠️</div>
+        <div className="text-center max-w-md p-6 animate-scale-in">
+          <div className="text-red-400 text-4xl mb-4 animate-bounce-gentle">⚠️</div>
           <h2 className="text-2xl font-bold text-white mb-4">Connection Error</h2>
           <p className="text-gray-300 mb-6">{error}</p>
           <button
             onClick={() => loadCategories()}
-            className="px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white rounded transition-colors"
+            className="px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white rounded transition-colors interactive-hover"
           >
             Try Again
           </button>
@@ -155,13 +250,11 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  const totalQuestions = categories.reduce((sum, category) => sum + category.questions.length, 0);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black">
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
+        <div className="text-center mb-8 animate-fade-in">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 animate-glow">
             Coding Questions
           </h1>
           <p className="text-gray-300 text-lg">
@@ -169,10 +262,11 @@ const Dashboard: React.FC = () => {
           </p>
         </div>
 
-        <div className="text-center mb-8">
-          <div className="bg-white/5 border border-white/10 rounded-lg p-4 inline-block backdrop-blur-sm">
+        {/* Stats and Voice Commands Toggle */}
+        <div className="flex flex-col lg:flex-row items-center justify-between mb-8 gap-4">
+          <div className="bg-white/5 border border-white/10 rounded-lg p-4 backdrop-blur-sm glass-morphism animate-slide-up">
             <div className="text-white">
-              <strong>{categories.length}</strong> categories, <strong>{totalQuestions}</strong> questions
+              <strong>{stats.totalFilteredCategories}</strong> categories, <strong>{stats.totalQuestions}</strong> questions
             </div>
             {token && (
               <div className="text-gray-300 text-sm">
@@ -180,9 +274,18 @@ const Dashboard: React.FC = () => {
               </div>
             )}
           </div>
+
+          <Button
+            onClick={() => setShowVoiceCommands(!showVoiceCommands)}
+            variant="outline"
+            className="bg-white/5 border-white/20 text-white hover:bg-white/10 transition-all duration-200"
+          >
+            <Mic className="w-4 h-4 mr-2" />
+            {showVoiceCommands ? 'Hide' : 'Show'} Voice Commands
+          </Button>
         </div>
 
-        <div className="mb-8">
+        <div className="mb-8 animate-slide-down">
           <SearchAndFilter
             onSearchChange={setSearchQuery}
             onDifficultyChange={setDifficultyFilter}
@@ -194,16 +297,34 @@ const Dashboard: React.FC = () => {
         </div>
 
         {categories.length > 0 ? (
-          <CategoryAccordion
-            categories={categories}
-            completedQuestions={completedQuestions}
-            bookmarkedQuestions={bookmarkedQuestions}
-            onProgressUpdate={handleProgressUpdate}
-            onBookmarkUpdate={handleBookmarkUpdate}
-          />
+          <div className="space-y-6">
+            <div className="animate-slide-up">
+              <CategoryAccordion
+                categories={categories}
+                completedQuestions={completedQuestions}
+                bookmarkedQuestions={bookmarkedQuestions}
+                onProgressUpdate={handleProgressUpdate}
+                onBookmarkUpdate={handleBookmarkUpdate}
+                openCategoryId={openCategoryId}
+              />
+            </div>
+
+            {/* Pagination */}
+            <div className="animate-fade-in">
+              <Pagination
+                currentPage={pagination.currentPage}
+                totalPages={pagination.totalPages}
+                totalItems={pagination.totalCategories}
+                itemsPerPage={pagination.limit}
+                onPageChange={handlePageChange}
+                onItemsPerPageChange={handleItemsPerPageChange}
+                className="my-8"
+              />
+            </div>
+          </div>
         ) : (
-          <div className="text-center py-16">
-            <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+          <div className="text-center py-16 animate-scale-in">
+            <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4 animate-float" />
             <h3 className="text-xl font-semibold text-gray-300 mb-2">
               {searchQuery || difficultyFilter ? 'No questions match your filters' : 'No questions found'}
             </h3>
@@ -220,7 +341,7 @@ const Dashboard: React.FC = () => {
                   setDifficultyFilter('');
                   setSortBy('');
                 }}
-                className="mt-4 px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded transition-colors"
+                className="mt-4 px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded transition-colors interactive-hover"
               >
                 Clear Filters
               </button>
@@ -228,6 +349,16 @@ const Dashboard: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Voice Commands Component */}
+      {showVoiceCommands && (
+        <VoiceCommands
+          categories={categories}
+          onCategoryOpen={handleCategoryOpen}
+          onSearchQuery={handleVoiceSearch}
+          onDifficultyFilter={handleVoiceDifficultyFilter}
+        />
+      )}
     </div>
   );
 };
