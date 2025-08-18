@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import CategoryAccordion from '@/components/dashboard/CategoryAccordion';
 import SearchAndFilter from '@/components/dashboard/SearchAndFilter';
 import Pagination from '@/components/dashboard/Pagination';
-import VoiceCommands from '@/components/dashboard/VoicCommands';
+import VoiceCommands from '@/components/dashboard/VoiceCommands';
 import { toast } from '@/components/hooks/use-toast';
 import { Loader2, BookOpen, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';

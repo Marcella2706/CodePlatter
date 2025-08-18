@@ -53,7 +53,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
         recognition.onstart = () => {
           setIsListening(true);
           setTranscript('');
-          speak("I'm listening...");
         };
 
         recognition.onresult = (event: SpeechRecognitionEvent) => {
@@ -203,11 +202,10 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
     }
 
     if (command.includes('clear filters') || command.includes('reset filters')) {
-      if (onDifficultyFilter) {
-        onDifficultyFilter('');
-        speak("Clearing all filters");
-        return;
-      }
+      if(onDifficultyFilter) onDifficultyFilter('');
+      if(onSearchQuery) onSearchQuery('');
+      speak("Clearing all filters");
+      return;
     }
 
     if (command.includes('help') || command.includes('what can you do')) {
