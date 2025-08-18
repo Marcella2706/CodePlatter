@@ -73,16 +73,16 @@ const Pagination: React.FC<PaginationProps> = ({
   if (totalPages <= 1) {
     return (
       <div className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${className}`}>
-        <div className="text-sm text-gray-400">
+        <div className="text-sm text-blue-600 dark:text-gray-400">
           Showing {totalItems} {totalItems === 1 ? 'result' : 'results'}
         </div>
         {showItemsPerPage && onItemsPerPageChange && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">Items per page:</span>
+            <span className="text-sm text-blue-600 dark:text-gray-400">Items per page:</span>
             <select
               value={itemsPerPage}
               onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-              className="bg-white/5 border border-white/20 text-white rounded px-2 py-1 text-sm focus:border-blue-400 transition-colors"
+              className="bg-white dark:bg-white/5 border border-blue-200 dark:border-white/20 text-blue-700 dark:text-white rounded px-2 py-1 text-sm focus:border-blue-400 transition-colors"
             >
               <option value={5}>5</option>
               <option value={10}>10</option>
@@ -98,26 +98,23 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className={`flex flex-col lg:flex-row items-center justify-between gap-4 ${className}`}>
-      {/* Results info */}
-      <div className="text-sm text-gray-400 order-2 lg:order-1">
+
+      <div className="text-sm text-blue-600 dark:text-gray-400 order-2 lg:order-1">
         Showing {startItem}-{endItem} of {totalItems} results
       </div>
 
-      {/* Pagination controls */}
       <div className="flex items-center gap-2 order-1 lg:order-2">
-        {/* Previous button */}
         <Button
           variant="outline"
           size="sm"
           onClick={handlePrevious}
           disabled={currentPage === 1}
-          className="p-2 bg-white/5 border-white/20 text-white hover:bg-white/10 disabled:opacity-50 transition-all duration-200"
+          className="p-2 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 disabled:opacity-50 transition-all duration-200"
           aria-label="Previous page"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
 
-        {/* Page numbers */}
         <div className="flex items-center gap-1">
           {getVisiblePages().map((page, index) => (
             <React.Fragment key={index}>
@@ -126,7 +123,7 @@ const Pagination: React.FC<PaginationProps> = ({
                   variant="ghost"
                   size="sm"
                   disabled
-                  className="p-2 w-8 h-8 text-gray-400"
+                  className="p-2 w-8 h-8 text-blue-500 dark:text-gray-400"
                   aria-label="More pages"
                 >
                   <MoreHorizontal className="h-4 w-4" />
@@ -139,7 +136,7 @@ const Pagination: React.FC<PaginationProps> = ({
                   className={`w-8 h-8 p-0 text-sm transition-all duration-200 ${
                     currentPage === page
                       ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'bg-white/5 border-white/20 text-white hover:bg-white/10'
+                      : 'bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10'
                   }`}
                   aria-label={`Page ${page}`}
                   aria-current={currentPage === page ? 'page' : undefined}
@@ -151,27 +148,25 @@ const Pagination: React.FC<PaginationProps> = ({
           ))}
         </div>
 
-        {/* Next button */}
         <Button
           variant="outline"
           size="sm"
           onClick={handleNext}
           disabled={currentPage === totalPages}
-          className="p-2 bg-white/5 border-white/20 text-white hover:bg-white/10 disabled:opacity-50 transition-all duration-200"
+          className="p-2 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 disabled:opacity-50 transition-all duration-200"
           aria-label="Next page"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
 
-      {/* Items per page selector */}
       {showItemsPerPage && onItemsPerPageChange && (
         <div className="flex items-center gap-2 order-3">
-          <span className="text-sm text-gray-400 whitespace-nowrap">Items per page:</span>
+          <span className="text-sm text-blue-600 dark:text-gray-400 whitespace-nowrap">Items per page:</span>
           <select
             value={itemsPerPage}
             onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-            className="bg-white/5 border border-white/20 text-white rounded px-2 py-1 text-sm focus:border-blue-400 transition-colors min-w-[60px]"
+            className="bg-white dark:bg-white/5 border border-blue-200 dark:border-white/20 text-blue-700 dark:text-white rounded px-2 py-1 text-sm focus:border-blue-400 transition-colors min-w-[60px]"
             aria-label="Items per page"
           >
             <option value={5}>5</option>

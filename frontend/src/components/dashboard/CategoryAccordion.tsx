@@ -35,13 +35,11 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
   const [openItems, setOpenItems] = useState<string[]>([]);
   const [animatingItems, setAnimatingItems] = useState<Set<string>>(new Set());
 
-  // Handle voice command to open specific category
   useEffect(() => {
     if (openCategoryId && !openItems.includes(openCategoryId)) {
       setOpenItems(prev => [...prev, openCategoryId]);
       setAnimatingItems(prev => new Set(prev).add(openCategoryId));
       
-      // Remove animation class after animation completes
       setTimeout(() => {
         setAnimatingItems(prev => {
           const next = new Set(prev);
@@ -137,9 +135,9 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
             value={category._id}
             data-category-id={category._id}
             className={`
-              bg-white/5 dark:bg-black/10 border-white/10 rounded-lg overflow-hidden
+              bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 rounded-lg overflow-hidden
               transition-all duration-500 ease-out
-              hover:bg-white/10 dark:hover:bg-black/20
+              hover:bg-blue-50 dark:hover:bg-black/20
               ${isAnimating ? 'animate-bounce-gentle' : ''}
               ${isHighlighted ? 'ring-2 ring-blue-400 ring-opacity-50 shadow-lg shadow-blue-400/20' : ''}
               ${index % 2 === 0 ? 'animate-slide-left' : 'animate-slide-right'}
@@ -149,19 +147,18 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
               animationFillMode: 'both'
             }}
           >
-            <AccordionTrigger className="px-6 py-4 hover:bg-white/5 dark:hover:bg-black/5 transition-all duration-300 group">
+            <AccordionTrigger className="px-6 py-4 hover:bg-blue-50 dark:hover:bg-black/5 transition-all duration-300 group">
               <div className="flex items-center justify-between w-full mr-4">
                 <div className="flex items-center space-x-3">
-                  <h3 className="text-lg font-semibold text-white group-hover:text-blue-300 transition-colors duration-300">
+                  <h3 className="text-lg font-semibold text-blue-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors duration-300">
                     {category.title}
                   </h3>
-                  <span className="text-sm text-gray-400 bg-white/10 px-2 py-1 rounded-full">
+                  <span className="text-sm text-blue-600 dark:text-gray-400 bg-blue-100 dark:bg-white/10 px-2 py-1 rounded-full">
                     {totalQuestions} question{totalQuestions !== 1 ? 's' : ''}
                   </span>
                 </div>
                 
                 <div className="flex items-center space-x-4">
-                  {/* Difficulty breakdown for desktop */}
                   <div className="hidden lg:flex items-center space-x-3 text-xs">
                     {Object.entries(difficultyStats).map(([difficulty, count]) => {
                       if (count === 0) return null;
@@ -177,9 +174,8 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
                     })}
                   </div>
 
-                  {/* Progress bar and percentage */}
                   <div className="flex items-center space-x-3">
-                    <div className="w-24 bg-gray-700 rounded-full h-2 overflow-hidden">
+                    <div className="w-24 bg-gray-300 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                       <div
                         className={`h-2 rounded-full transition-all duration-700 ease-out bg-gradient-to-r ${getProgressColor(completionPercentage)}`}
                         style={{ 
@@ -188,12 +184,12 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
                         }}
                       />
                     </div>
-                    <span className="text-sm text-gray-300 min-w-[3rem] font-medium">
+                    <span className="text-sm text-blue-700 dark:text-gray-300 min-w-[3rem] font-medium">
                       {completionPercentage}%
                     </span>
                   </div>
                   
-                  <span className="text-sm text-gray-400 bg-blue-600/20 px-2 py-1 rounded">
+                  <span className="text-sm text-blue-700 dark:text-gray-400 bg-blue-100 dark:bg-blue-600/20 px-2 py-1 rounded">
                     {completedCount}/{totalQuestions}
                   </span>
                 </div>
@@ -204,11 +200,10 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
               <div className="space-y-3 pt-2">
                 {category.questions.length > 0 ? (
                   <>
-                    {/* Mobile difficulty stats */}
-                    <div className="lg:hidden bg-white/5 rounded-lg p-3 mb-4 animate-fade-in">
+                    <div className="lg:hidden bg-blue-50 dark:bg-white/5 rounded-lg p-3 mb-4 animate-fade-in">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-gray-300 font-medium">Progress Overview</span>
-                        <span className="text-sm text-blue-400 font-bold">
+                        <span className="text-sm text-blue-700 dark:text-gray-300 font-medium">Progress Overview</span>
+                        <span className="text-sm text-blue-600 dark:text-blue-400 font-bold">
                           {completedCount}/{totalQuestions} completed
                         </span>
                       </div>
@@ -218,20 +213,19 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
                           const completed = difficultyCompletionStats[difficulty as keyof typeof difficultyCompletionStats];
                           const percentage = getCompletionPercentage(completed, count);
                           return (
-                            <div key={difficulty} className="bg-white/5 rounded p-2 text-center">
+                            <div key={difficulty} className="bg-white dark:bg-white/5 rounded p-2 text-center">
                               <div className={`flex items-center justify-center mb-1 ${getDifficultyColor(difficulty as 'Easy' | 'Medium' | 'Hard')}`}>
                                 <div className={`w-2 h-2 rounded-full mr-1 ${getDifficultyBgColor(difficulty as 'Easy' | 'Medium' | 'Hard')}`}></div>
                                 {difficulty}
                               </div>
-                              <div className="text-white font-semibold">{completed}/{count}</div>
-                              <div className="text-gray-400 text-xs">{percentage}%</div>
+                              <div className="text-blue-700 dark:text-white font-semibold">{completed}/{count}</div>
+                              <div className="text-blue-600 dark:text-gray-400 text-xs">{percentage}%</div>
                             </div>
                           );
                         })}
                       </div>
                     </div>
 
-                    {/* Questions list */}
                     {category.questions.map((question, qIndex) => (
                       <div 
                         key={question._id}
@@ -252,7 +246,7 @@ const CategoryAccordion: React.FC<CategoryAccordionProps> = ({
                     ))}
                   </>
                 ) : (
-                  <div className="text-center py-8 text-gray-400 animate-scale-in">
+                  <div className="text-center py-8 text-blue-600 dark:text-gray-400 animate-scale-in">
                     <div className="text-4xl mb-2">📝</div>
                     <p>No questions in this category yet.</p>
                     <p className="text-sm mt-1">Check back later for new content!</p>

@@ -36,7 +36,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
-  // Initialize speech recognition
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -103,10 +102,8 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
     };
   }, []);
 
-  // Text-to-speech function
   const speak = useCallback((text: string) => {
     if (synthRef.current && 'speechSynthesis' in window) {
-      // Cancel any ongoing speech
       synthRef.current.cancel();
       
       const utterance = new SpeechSynthesisUtterance(text);
@@ -114,7 +111,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
       utterance.pitch = 1;
       utterance.volume = 0.8;
       
-      // Use a more natural voice if available
       const voices = synthRef.current.getVoices();
       const preferredVoice = voices.find(voice => 
         voice.name.includes('Google') || 
@@ -130,11 +126,9 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
     }
   }, []);
 
-  // Process voice commands
   const processCommand = useCallback((command: string) => {
     console.log('Processing command:', command);
     
-    // Navigation commands
     if (command.includes('go to dashboard') || command.includes('open dashboard')) {
       navigate('/dashboard');
       speak("Opening dashboard");
@@ -159,7 +153,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
       return;
     }
 
-    // Category commands
     const categoryMatch = categories.find(category => {
       const categoryName = category.title.toLowerCase();
       return command.includes(`open ${categoryName}`) || 
@@ -173,7 +166,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
       return;
     }
 
-    // Search commands
     if (command.includes('search for') || command.includes('find')) {
       const searchQuery = command
         .replace(/^(search for|find)/i, '')
@@ -186,7 +178,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
       }
     }
 
-    // Difficulty filter commands
     if (command.includes('show easy') || command.includes('filter easy')) {
       if (onDifficultyFilter) {
         onDifficultyFilter('Easy');
@@ -219,7 +210,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
       }
     }
 
-    // Help command
     if (command.includes('help') || command.includes('what can you do')) {
       const helpText = "I can help you navigate. Try saying: 'go to dashboard', 'open arrays', 'search for sorting', 'show easy questions', or 'help' for this message.";
       speak(helpText);
@@ -230,7 +220,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
       return;
     }
 
-    // Default response for unrecognized commands
     speak("I didn't understand that command. Say 'help' to see what I can do.");
     
     toast({
@@ -240,7 +229,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
     });
   }, [categories, navigate, onCategoryOpen, onSearchQuery, onDifficultyFilter, speak]);
 
-  // Start listening
   const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {
       try {
@@ -256,14 +244,12 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
     }
   }, [isListening]);
 
-  // Stop listening
   const stopListening = useCallback(() => {
     if (recognitionRef.current && isListening) {
       recognitionRef.current.stop();
     }
   }, [isListening]);
 
-  // Toggle listening
   const toggleListening = useCallback(() => {
     if (isListening) {
       stopListening();
@@ -272,10 +258,8 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
     }
   }, [isListening, startListening, stopListening]);
 
-  // Keyboard shortcut (Space bar to toggle)
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      // Only trigger if not typing in an input field
       if (event.code === 'Space' && event.ctrlKey && !event.shiftKey) {
         event.preventDefault();
         toggleListening();
@@ -297,7 +281,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
   return (
     <div className="fixed bottom-4 right-4 z-50">
       <div className="flex flex-col items-end gap-2">
-        {/* Transcript display */}
         {transcript && (
           <div className="bg-black/80 text-white p-3 rounded-lg max-w-xs backdrop-blur-sm animate-slide-up">
             <div className="text-xs text-gray-300 mb-1">
@@ -307,7 +290,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
           </div>
         )}
 
-        {/* Voice control button */}
         <Button
           onClick={toggleListening}
           className={`w-14 h-14 rounded-full p-0 transition-all duration-300 shadow-lg ${
@@ -324,7 +306,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
           )}
         </Button>
 
-        {/* Help text */}
         <div className="text-xs text-gray-400 text-center max-w-[200px]">
           {isListening ? (
             <span className="text-red-400">🎙️ Listening...</span>
@@ -334,7 +315,6 @@ const VoiceCommands: React.FC<VoiceCommandsProps> = ({
         </div>
       </div>
 
-      {/* Voice indicator animations */}
       {isListening && (
         <div className="absolute inset-0 rounded-full animate-ping bg-red-400 opacity-20"></div>
       )}

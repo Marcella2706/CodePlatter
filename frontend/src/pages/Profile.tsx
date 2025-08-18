@@ -23,12 +23,10 @@ const Profile: React.FC = () => {
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // Profile update states
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [profileLoading, setProfileLoading] = useState(false);
   
-  // Password update states
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -176,10 +174,10 @@ const Profile: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-12 w-12 animate-spin text-blue-400 mx-auto mb-4" />
-          <p className="text-gray-300">Loading profile...</p>
+          <p className="text-blue-700 dark:text-gray-300">Loading profile...</p>
         </div>
       </div>
     );
@@ -187,44 +185,43 @@ const Profile: React.FC = () => {
 
   if (!userDetails) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black flex items-center justify-center">
         <div className="text-center">
           <User className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-300 mb-2">Profile not found</h2>
-          <p className="text-gray-400">Unable to load your profile information.</p>
+          <h2 className="text-xl font-semibold text-blue-700 dark:text-gray-300 mb-2">Profile not found</h2>
+          <p className="text-blue-600 dark:text-gray-400">Unable to load your profile information.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black">
+    <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
             Profile Settings
           </h1>
-          <p className="text-gray-300 text-lg">
+          <p className="text-blue-600 dark:text-gray-300 text-lg">
             Manage your account information and security
           </p>
         </div>
 
         <div className="max-w-2xl mx-auto space-y-6">
-          {/* Profile Information Card */}
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
+              <CardTitle className="text-blue-700 dark:text-white flex items-center">
                 <User className="w-5 h-5 mr-2" />
                 Profile Information
               </CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-blue-600 dark:text-gray-400">
                 Update your personal information and email address
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleProfileUpdate} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-gray-200">Full Name</Label>
+                  <Label htmlFor="name" className="text-blue-700 dark:text-gray-200">Full Name</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
@@ -233,13 +230,13 @@ const Profile: React.FC = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400"
+                      className="pl-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-200">Email Address</Label>
+                  <Label htmlFor="email" className="text-blue-700 dark:text-gray-200">Email Address</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
@@ -248,7 +245,7 @@ const Profile: React.FC = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400"
+                      className="pl-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400"
                     />
                   </div>
                 </div>
@@ -274,21 +271,20 @@ const Profile: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Password Update Card */}
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
+              <CardTitle className="text-blue-700 dark:text-white flex items-center">
                 <Lock className="w-5 h-5 mr-2" />
                 Change Password
               </CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-blue-600 dark:text-gray-400">
                 Update your password to keep your account secure
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handlePasswordUpdate} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="currentPassword" className="text-gray-200">Current Password</Label>
+                  <Label htmlFor="currentPassword" className="text-blue-700 dark:text-gray-200">Current Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
@@ -297,7 +293,7 @@ const Profile: React.FC = () => {
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       required
-                      className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400"
+                      className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400"
                       placeholder="Enter current password"
                     />
                     <button
@@ -311,7 +307,7 @@ const Profile: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="newPassword" className="text-gray-200">New Password</Label>
+                  <Label htmlFor="newPassword" className="text-blue-700 dark:text-gray-200">New Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
@@ -320,7 +316,7 @@ const Profile: React.FC = () => {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
-                      className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400"
+                      className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400"
                       placeholder="Enter new password"
                     />
                     <button
@@ -334,7 +330,7 @@ const Profile: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-gray-200">Confirm New Password</Label>
+                  <Label htmlFor="confirmPassword" className="text-blue-700 dark:text-gray-200">Confirm New Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
@@ -343,7 +339,7 @@ const Profile: React.FC = () => {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
-                      className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400"
+                      className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400"
                       placeholder="Confirm new password"
                     />
                     <button
@@ -357,7 +353,7 @@ const Profile: React.FC = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm text-gray-400">Password Requirements:</div>
+                  <div className="text-sm text-blue-600 dark:text-gray-400">Password Requirements:</div>
                   <div className="space-y-1 text-xs">
                     <div className={`flex items-center ${newPassword.length >= 6 ? 'text-green-400' : 'text-gray-500'}`}>
                       <CheckCircle className="w-3 h-3 mr-1" /> At least 6 characters
@@ -389,19 +385,18 @@ const Profile: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Account Statistics */}
-          <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+          <Card className="bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="text-white">Account Statistics</CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardTitle className="text-blue-700 dark:text-white">Account Statistics</CardTitle>
+              <CardDescription className="text-blue-600 dark:text-gray-400">
                 Your account information and activity
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className='flex justify-around'>
-                <div className="bg-white/5 rounded-lg px-6 py-4">
-                  <div className="text-sm text-gray-400">Member Since</div>
-                  <div className="text-white font-semibold">
+                <div className="bg-white dark:bg-white/5 rounded-lg px-6 py-4">
+                  <div className="text-sm text-blue-600 dark:text-gray-400">Member Since</div>
+                  <div className="text-blue-700 dark:text-white font-semibold">
                     {userDetails.createdAt 
                       ? new Date(userDetails.createdAt).toLocaleDateString('en-US', {
                           year: 'numeric',
@@ -412,15 +407,15 @@ const Profile: React.FC = () => {
                     }
                   </div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4">
-                  <div className="text-sm text-gray-400">Bookmarked Questions</div>
-                  <div className="text-blue-400 font-semibold">
+                <div className="bg-white dark:bg-white/5 rounded-lg p-4">
+                  <div className="text-sm text-blue-600 dark:text-gray-400">Bookmarked Questions</div>
+                  <div className="text-blue-700 dark:text-blue-400 font-semibold">
                     {userDetails.bookmarks?.length || 0}
                   </div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4">
-                  <div className="text-sm text-gray-400">Completed Questions</div>
-                  <div className="text-green-400 font-semibold">
+                <div className="bg-white dark:bg-white/5 rounded-lg p-4">
+                  <div className="text-sm text-blue-600 dark:text-gray-400">Completed Questions</div>
+                  <div className="text-blue-700 dark:text-green-400 font-semibold">
                     {userDetails.progress?.length || 0}
                   </div>
                 </div>

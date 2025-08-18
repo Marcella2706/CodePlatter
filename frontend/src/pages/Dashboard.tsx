@@ -43,7 +43,6 @@ const Dashboard: React.FC = () => {
   const [completedQuestions, setCompletedQuestions] = useState<string[]>([]);
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState<string[]>([]);
   
-  // Pagination state
   const [pagination, setPagination] = useState<PaginationData>({
     currentPage: 1,
     totalPages: 1,
@@ -56,12 +55,10 @@ const Dashboard: React.FC = () => {
     totalFilteredCategories: 0,
   });
  
-  // Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [sortBy, setSortBy] = useState('');
 
-  // Voice commands state
   const [showVoiceCommands, setShowVoiceCommands] = useState(false);
   const [openCategoryId, setOpenCategoryId] = useState<string | null>(null);
 
@@ -70,7 +67,6 @@ const Dashboard: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      // Build query parameters
       const params = new URLSearchParams();
       if (searchQuery.trim()) params.append('search', searchQuery.trim());
       if (difficultyFilter) params.append('difficulty', difficultyFilter);
@@ -92,7 +88,6 @@ const Dashboard: React.FC = () => {
       
       setCategories(categoryData.categories || []);
       
-      // Update pagination data
       if (categoryData.pagination) {
         setPagination({
           currentPage: categoryData.pagination.currentPage,
@@ -102,7 +97,6 @@ const Dashboard: React.FC = () => {
         });
       }
       
-      // Update stats
       if (categoryData.stats) {
         setStats({
           totalQuestions: categoryData.stats.totalQuestions,
@@ -153,17 +147,14 @@ const Dashboard: React.FC = () => {
     }
   }, [token]);
 
-  // Load categories when filters or pagination changes
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
 
-  // Load user data once when component mounts
   useEffect(() => {
     loadUserData();
   }, [loadUserData]);
 
-  // Reset to first page when filters change
   useEffect(() => {
     if (pagination.currentPage !== 1) {
       setPagination(prev => ({ ...prev, currentPage: 1 }));
@@ -188,7 +179,6 @@ const Dashboard: React.FC = () => {
 
   const handlePageChange = (page: number) => {
     setPagination(prev => ({ ...prev, currentPage: page }));
-    // Scroll to top when page changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -196,14 +186,12 @@ const Dashboard: React.FC = () => {
     setPagination(prev => ({ 
       ...prev, 
       limit, 
-      currentPage: 1 // Reset to first page when changing page size
+      currentPage: 1 
     }));
   };
 
-  // Voice command handlers
   const handleCategoryOpen = (categoryId: string) => {
     setOpenCategoryId(categoryId);
-    // Auto-scroll to the category
     setTimeout(() => {
       const element = document.querySelector(`[data-category-id="${categoryId}"]`);
       if (element) {
@@ -222,11 +210,11 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black flex items-center justify-center">
         <div className="text-center animate-fade-in">
           <Loader2 className="h-12 w-12 animate-spin text-blue-400 mx-auto mb-4" />
-          <p className="text-gray-300">Loading questions...</p>
-          <p className="text-gray-500 text-sm mt-2">Connecting to {BASE_URL}</p>
+          <p className="text-blue-700 dark:text-gray-300">Loading questions...</p>
+          <p className="text-blue-600 dark:text-gray-500 text-sm mt-2">Connecting to {BASE_URL}</p>
         </div>
       </div>
     );
@@ -234,11 +222,11 @@ const Dashboard: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black flex items-center justify-center">
         <div className="text-center max-w-md p-6 animate-scale-in">
           <div className="text-red-400 text-4xl mb-4 animate-bounce-gentle">⚠️</div>
-          <h2 className="text-2xl font-bold text-white mb-4">Connection Error</h2>
-          <p className="text-gray-300 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-blue-700 dark:text-white mb-4">Connection Error</h2>
+          <p className="text-blue-600 dark:text-gray-300 mb-6">{error}</p>
           <button
             onClick={() => loadCategories()}
             className="px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white rounded transition-colors interactive-hover"
@@ -251,25 +239,24 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black">
+    <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8 animate-fade-in">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 animate-glow">
             Coding Questions
           </h1>
-          <p className="text-gray-300 text-lg">
+          <p className="text-blue-600 dark:text-gray-300 text-lg">
             Master your coding skills with curated programming challenges
           </p>
         </div>
 
-        {/* Stats and Voice Commands Toggle */}
         <div className="flex flex-col lg:flex-row items-center justify-between mb-8 gap-4">
-          <div className="bg-white/5 border border-white/10 rounded-lg p-4 backdrop-blur-sm glass-morphism animate-slide-up">
-            <div className="text-white">
+          <div className="bg-white dark:bg-white/5 border border-blue-200 dark:border-white/10 rounded-lg p-4 backdrop-blur-sm glass-morphism animate-slide-up">
+            <div className="text-blue-700 dark:text-white">
               <strong>{stats.totalFilteredCategories}</strong> categories, <strong>{stats.totalQuestions}</strong> questions
             </div>
             {token && (
-              <div className="text-gray-300 text-sm">
+              <div className="text-blue-600 dark:text-gray-300 text-sm">
                 {completedQuestions.length} completed, {bookmarkedQuestions.length} bookmarked
               </div>
             )}
@@ -278,7 +265,7 @@ const Dashboard: React.FC = () => {
           <Button
             onClick={() => setShowVoiceCommands(!showVoiceCommands)}
             variant="outline"
-            className="bg-white/5 border-white/20 text-white hover:bg-white/10 transition-all duration-200"
+            className="bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white hover:bg-blue-50 dark:hover:bg-white/10 transition-all duration-200"
           >
             <Mic className="w-4 h-4 mr-2" />
             {showVoiceCommands ? 'Hide' : 'Show'} Voice Commands
@@ -309,7 +296,6 @@ const Dashboard: React.FC = () => {
               />
             </div>
 
-            {/* Pagination */}
             <div className="animate-fade-in">
               <Pagination
                 currentPage={pagination.currentPage}
@@ -325,10 +311,10 @@ const Dashboard: React.FC = () => {
         ) : (
           <div className="text-center py-16 animate-scale-in">
             <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4 animate-float" />
-            <h3 className="text-xl font-semibold text-gray-300 mb-2">
+            <h3 className="text-xl font-semibold text-blue-700 dark:text-gray-300 mb-2">
               {searchQuery || difficultyFilter ? 'No questions match your filters' : 'No questions found'}
             </h3>
-            <p className="text-gray-400">
+            <p className="text-blue-600 dark:text-gray-400">
               {searchQuery || difficultyFilter 
                 ? 'Try adjusting your search criteria' 
                 : `Check that your backend server is running on ${BASE_URL}`
@@ -350,7 +336,6 @@ const Dashboard: React.FC = () => {
         )}
       </div>
 
-      {/* Voice Commands Component */}
       {showVoiceCommands && (
         <VoiceCommands
           categories={categories}

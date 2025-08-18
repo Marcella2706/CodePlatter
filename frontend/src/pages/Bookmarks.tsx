@@ -77,27 +77,27 @@ const Bookmarks: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-12 w-12 animate-spin text-blue-400 mx-auto mb-4" />
-          <p className="text-gray-300">Loading bookmarks...</p>
+          <p className="text-blue-700 dark:text-gray-300">Loading bookmarks...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black">
+    <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
             Your Bookmarks
           </h1>
-          <p className="text-gray-300 text-lg">
+          <p className="text-blue-600 dark:text-gray-300 text-lg">
             Questions you've saved for later practice
           </p>
           {bookmarks.length > 0 && (
-            <p className="text-gray-400 text-sm mt-2">
+            <p className="text-blue-500 dark:text-gray-400 text-sm mt-2">
               {bookmarks.length} bookmark{bookmarks.length !== 1 ? 's' : ''} saved
             </p>
           )}
@@ -119,10 +119,10 @@ const Bookmarks: React.FC = () => {
         ) : (
           <div className="text-center py-16">
             <BookmarkX className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-300 mb-2">
+            <h3 className="text-xl font-semibold text-blue-700 dark:text-gray-300 mb-2">
               No bookmarks yet
             </h3>
-            <p className="text-gray-400 mb-6">
+            <p className="text-blue-600 dark:text-gray-400 mb-6">
               Start bookmarking questions you want to practice later
             </p>
             <a

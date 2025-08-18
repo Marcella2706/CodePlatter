@@ -123,19 +123,19 @@ const ForgotPasswordForm: React.FC = () => {
   };
 
   const renderEmailStep = () => (
-    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md mx-auto bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Forgot Password?
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-blue-600 dark:text-gray-400">
           Enter your email to receive a verification code
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSendOTP} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-200">Email Address</Label>
+            <Label htmlFor="email" className="text-blue-700 dark:text-gray-200">Email Address</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -145,7 +145,7 @@ const ForgotPasswordForm: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
             </div>
           </div>
@@ -153,7 +153,7 @@ const ForgotPasswordForm: React.FC = () => {
             {loading ? 'Sending OTP...' : 'Send Verification Code'}
           </Button>
           <div className="text-center">
-            <Link to="/login" className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300">
+            <Link to="/login" className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Login
             </Link>
           </div>
@@ -163,19 +163,19 @@ const ForgotPasswordForm: React.FC = () => {
   );
 
   const renderOTPStep = () => (
-    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md mx-auto bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Enter Verification Code
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-blue-600 dark:text-gray-400">
           We've sent a 6-digit code to {email}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleVerifyOTP} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="otp" className="text-gray-200">Verification Code</Label>
+            <Label htmlFor="otp" className="text-blue-700 dark:text-gray-200">Verification Code</Label>
             <div className="relative">
               <Shield className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -186,19 +186,19 @@ const ForgotPasswordForm: React.FC = () => {
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 maxLength={6}
                 required
-                className="pl-10 text-center text-lg tracking-widest bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 text-center text-lg tracking-widest bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
             </div>
           </div>
           <div className="text-center space-y-2">
-            {timeLeft > 0 ? <div className="text-sm text-gray-400 flex items-center justify-center"><Clock className="w-4 h-4 mr-1" /> Code expires in {formatTime(timeLeft)}</div> : <div className="text-sm text-red-400">Code has expired</div>}
-            {canResend && <Button type="button" variant="ghost" onClick={handleResendOTP} className="text-blue-400">Resend Code</Button>}
+            {timeLeft > 0 ? <div className="text-sm text-blue-600 dark:text-gray-400 flex items-center justify-center"><Clock className="w-4 h-4 mr-1" /> Code expires in {formatTime(timeLeft)}</div> : <div className="text-sm text-red-400">Code has expired</div>}
+            {canResend && <Button type="button" variant="ghost" onClick={handleResendOTP} className="text-blue-600 dark:text-blue-400">Resend Code</Button>}
           </div>
           <Button type="submit" disabled={loading || otp.length !== 6 || timeLeft === 0} className="w-full bg-gradient-to-r from-blue-700 to-purple-700 text-white">
             {loading ? 'Verifying...' : 'Verify Code'}
           </Button>
           <div className="text-center">
-            <button type="button" onClick={handleBack} className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300">
+            <button type="button" onClick={handleBack} className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
               <ArrowLeft className="w-4 h-4 mr-2" /> Change Email
             </button>
           </div>
@@ -208,36 +208,36 @@ const ForgotPasswordForm: React.FC = () => {
   );
 
   const renderPasswordStep = () => (
-    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md mx-auto bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Set New Password
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-blue-600 dark:text-gray-400">
           Create a strong password
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleResetPassword} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="newPassword" className="text-gray-200">New Password</Label>
+            <Label htmlFor="newPassword" className="text-blue-700 dark:text-gray-200">New Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <Input id="newPassword" type={showPassword ? 'text' : 'password'} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter new password" required className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"/>
+              <Input id="newPassword" type={showPassword ? 'text' : 'password'} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter new password" required className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"/>
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-gray-400 hover:text-gray-300">{showPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}</button>
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword" className="text-gray-200">Confirm Password</Label>
+            <Label htmlFor="confirmPassword" className="text-blue-700 dark:text-gray-200">Confirm Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400"/>
-              <Input id="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password" required className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"/>
+              <Input id="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm password" required className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"/>
               <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-3 text-gray-400 hover:text-gray-300">{showConfirmPassword ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}</button>
             </div>
           </div>
 
           <div className="space-y-2">
-            <div className="text-sm text-gray-400">Password Requirements:</div>
+            <div className="text-sm text-blue-600 dark:text-gray-400">Password Requirements:</div>
             <div className="space-y-1 text-xs">
               <div className={`flex items-center ${newPassword.length >= 6 ? 'text-green-400' : 'text-gray-500'}`}><CheckCircle className="w-3 h-3 mr-1"/>At least 6 characters</div>
               <div className={`flex items-center ${newPassword === confirmPassword && newPassword ? 'text-green-400' : 'text-gray-500'}`}><CheckCircle className="w-3 h-3 mr-1"/>Passwords match</div>
@@ -246,7 +246,7 @@ const ForgotPasswordForm: React.FC = () => {
 
           <Button type="submit" disabled={loading || newPassword.length < 6 || newPassword !== confirmPassword} className="w-full bg-gradient-to-r from-blue-700 to-purple-700 text-white">{loading ? 'Updating...' : 'Update Password'}</Button>
           <div className="text-center">
-            <button type="button" onClick={handleBack} className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300"><ArrowLeft className="w-4 h-4 mr-2"/>Back to Verification</button>
+            <button type="button" onClick={handleBack} className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"><ArrowLeft className="w-4 h-4 mr-2"/>Back to Verification</button>
           </div>
         </form>
       </CardContent>
@@ -254,16 +254,16 @@ const ForgotPasswordForm: React.FC = () => {
   );
 
   const renderSuccessStep = () => (
-    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md mx-auto bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
-        <div className="mx-auto w-16 h-16 bg-green-600/20 rounded-full flex items-center justify-center mb-4">
-          <CheckCircle className="w-8 h-8 text-green-400"/>
+        <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-600/20 rounded-full flex items-center justify-center mb-4">
+          <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400"/>
         </div>
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">Password Reset Successful!</CardTitle>
-        <CardDescription className="text-gray-400">Your password has been updated successfully</CardDescription>
+        <CardDescription className="text-blue-600 dark:text-gray-400">Your password has been updated successfully</CardDescription>
       </CardHeader>
       <CardContent className="text-center space-y-4">
-        <div className="text-gray-300">You can now sign in with your new password.</div>
+        <div className="text-blue-700 dark:text-gray-300">You can now sign in with your new password.</div>
         <Button onClick={() => navigate('/login')} className="w-full bg-gradient-to-r from-green-700 to-blue-700 text-white">Continue to Login</Button>
       </CardContent>
     </Card>

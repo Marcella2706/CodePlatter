@@ -28,12 +28,6 @@ const Navbar: React.FC = () => {
 
   const handleThemeToggle = () => {
     toggleTheme();
-    // Provide visual feedback
-    const button = document.querySelector('[data-theme-toggle]');
-    if (button) {
-      button.classList.add('animate-bounce-gentle');
-      setTimeout(() => button.classList.remove('animate-bounce-gentle'), 600);
-    }
   };
 
   useEffect(() => {
@@ -43,8 +37,7 @@ const Navbar: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Close mobile menu when route changes
+  
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
@@ -61,23 +54,22 @@ const Navbar: React.FC = () => {
     <nav
       className={`sticky top-0 z-50 w-full border-b transition-all duration-300 backdrop-blur-xl
         ${scrolled
-          ? 'bg-black/30 dark:bg-black/50 border-white/20'
-          : 'bg-blue-950/90 dark:bg-gray-900/90 border-white/10'
+          ? 'bg-white dark:bg-black/30 border-gray-200 dark:border-white/20'
+          : 'bg-white dark:bg-blue-950/90 border-gray-200 dark:border-white/10'
         }
         ${theme === 'dark' ? 'dark' : ''}
       `}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+    
           <Link to="/dashboard" className="flex items-center space-x-2 group">
-            <BookOpen className="h-8 w-8 text-white group-hover:text-blue-300 transition-colors duration-300" />
-            <span className="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
+            <BookOpen className="h-8 w-8 text-blue-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors duration-300" />
+            <span className="text-xl font-bold text-blue-700 dark:text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 dark:group-hover:from-blue-300 dark:group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
               CodePlatter
             </span>
           </Link>
           
-          {/* Desktop Navigation */}
           {user && (
             <div className="hidden md:flex items-center space-x-1">
               {navItems.map((item) => (
@@ -86,8 +78,8 @@ const Navbar: React.FC = () => {
                   to={item.path}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
                     isActive(item.path)
-                      ? 'bg-white/20 text-white shadow-lg'
-                      : 'text-white/80 hover:text-white hover:bg-white/10'
+                      ? 'bg-blue-100 dark:bg-white/20 text-blue-700 dark:text-white shadow-lg'
+                      : 'text-blue-600 dark:text-white/80 hover:text-blue-700 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-white/10'
                   }`}
                 >
                   {item.label}
@@ -96,15 +88,14 @@ const Navbar: React.FC = () => {
             </div>
           )}
 
-          {/* Right side controls */}
           <div className="flex items-center space-x-3">
-            {/* Theme Toggle */}
             <Button
               variant="ghost"
               size="sm"
               onClick={handleThemeToggle}
               data-theme-toggle
-              className="text-white hover:text-blue-200 hover:bg-white/10 transition-all duration-300 transform hover:scale-110"
+              style={{ transition: 'none' }}
+              className="text-blue-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-white/10"
               title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
             >
               {isDark ? (
@@ -116,12 +107,11 @@ const Navbar: React.FC = () => {
 
             {user ? (
               <>
-                {/* Mobile Menu Button */}
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden text-white hover:text-blue-200 hover:bg-white/10 transition-all duration-200"
+                  className="md:hidden text-blue-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-white/10 transition-all duration-200"
                 >
                   {mobileMenuOpen ? (
                     <X className="h-5 w-5" />
@@ -130,12 +120,11 @@ const Navbar: React.FC = () => {
                   )}
                 </Button>
 
-                {/* Desktop User Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="hidden md:flex items-center space-x-2 text-white hover:text-blue-200 hover:bg-white/10 transition-all duration-300"
+                      className="hidden md:flex items-center space-x-2 text-blue-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-white/10 transition-all duration-300"
                     >
                       <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center animate-glow">
                         <User className="h-4 w-4 text-white" />
@@ -145,27 +134,27 @@ const Navbar: React.FC = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="w-56 bg-gray-950/95 border-gray-700/50 backdrop-blur-xl shadow-2xl animate-scale-in"
+                    className="w-56 bg-white dark:bg-gray-950/95 border-gray-200 dark:border-gray-700/50 backdrop-blur-xl shadow-2xl animate-scale-in"
                     sideOffset={5}
                   >
-                    <div className="px-3 py-2 border-b border-gray-700/50">
-                      <p className="text-sm font-medium text-white">{user.name}</p>
-                      <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                    <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700/50">
+                      <p className="text-sm font-medium text-blue-700 dark:text-white">{user.name}</p>
+                      <p className="text-xs text-blue-600 dark:text-gray-400 truncate">{user.email}</p>
                     </div>
                     
                     <DropdownMenuItem
                       onClick={() => navigate('/profile')}
-                      className="text-gray-300 focus:text-white focus:bg-white/10 cursor-pointer transition-colors duration-150"
+                      className="text-blue-600 dark:text-gray-300 focus:text-blue-700 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10 cursor-pointer"
                     >
                       <Settings className="mr-2 h-4 w-4" />
                       Profile Settings
                     </DropdownMenuItem>
                     
-                    <DropdownMenuSeparator className="bg-gray-700/50" />
+                    <DropdownMenuSeparator className="bg-gray-200 dark:bg-gray-700/50" />
                     
                     <DropdownMenuItem
                       onClick={handleLogout}
-                      className="text-red-300 focus:text-red-200 focus:bg-red-900/20 cursor-pointer transition-colors duration-150"
+                      className="text-red-600 dark:text-red-300 focus:text-red-700 dark:focus:text-red-200 focus:bg-red-50 dark:focus:bg-red-900/20 cursor-pointer"
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       Sign Out
@@ -178,7 +167,7 @@ const Navbar: React.FC = () => {
                 <Link to="/login">
                   <Button 
                     variant="ghost" 
-                    className="text-white hover:text-blue-200 hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
+                    className="text-blue-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-200 hover:bg-blue-50 dark:hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
                   >
                     Sign In
                   </Button>
@@ -193,9 +182,8 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {user && mobileMenuOpen && (
-          <div className="md:hidden border-t border-white/10 bg-black/20 backdrop-blur-xl animate-slide-down">
+          <div className="md:hidden border-t border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 backdrop-blur-xl animate-slide-down">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
                 <Link
@@ -203,8 +191,8 @@ const Navbar: React.FC = () => {
                   to={item.path}
                   className={`flex items-center px-3 py-2 rounded-md text-base font-medium transition-all duration-200 ${
                     isActive(item.path)
-                      ? 'bg-white/20 text-white'
-                      : 'text-white/80 hover:text-white hover:bg-white/10'
+                      ? 'bg-blue-100 dark:bg-white/20 text-blue-700 dark:text-white'
+                      : 'text-blue-600 dark:text-white/80 hover:text-blue-700 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-white/10'
                   }`}
                 >
                   <item.icon className="mr-3 h-5 w-5" />
@@ -212,11 +200,11 @@ const Navbar: React.FC = () => {
                 </Link>
               ))}
               
-              <hr className="my-2 border-white/10" />
+              <hr className="my-2 border-gray-200 dark:border-white/10" />
               
               <Link
                 to="/profile"
-                className="flex items-center px-3 py-2 rounded-md text-base font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200"
+                className="flex items-center px-3 py-2 rounded-md text-base font-medium text-blue-600 dark:text-white/80 hover:text-blue-700 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-white/10 transition-all duration-200"
               >
                 <Settings className="mr-3 h-5 w-5" />
                 Profile Settings
@@ -224,7 +212,7 @@ const Navbar: React.FC = () => {
               
               <button
                 onClick={handleLogout}
-                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-red-300 hover:text-red-200 hover:bg-red-900/20 transition-all duration-200"
+                className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-300 hover:text-red-700 dark:hover:text-red-200 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
               >
                 <LogOut className="mr-3 h-5 w-5" />
                 Sign Out

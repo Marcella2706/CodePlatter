@@ -42,19 +42,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md mx-auto bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Welcome Back
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-blue-600 dark:text-gray-400">
           Sign in to your account to continue
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-200">
+            <Label htmlFor="email" className="text-blue-700 dark:text-gray-200">
               Email
             </Label>
             <div className="relative">
@@ -66,13 +66,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
             </div>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-gray-200">
+            <Label htmlFor="password" className="text-blue-700 dark:text-gray-200">
               Password
             </Label>
             <div className="relative">
@@ -84,7 +84,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
               <button
                 type="button"
@@ -99,7 +99,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
           <div className="flex justify-end">
             <Link
               to="/forgot-password"
-              className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
             >
               Forgot password?
             </Link>
@@ -120,9 +120,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess }) => {
             )}
           </Button>
 
-          <div className="text-center text-sm text-gray-400">
+          <div className="text-center text-sm text-blue-600 dark:text-gray-400">
             Don't have an account?{' '}
-            <Link to="/register" className="text-blue-400 hover:text-blue-300 transition-colors">
+            <Link to="/register" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
               Create one
             </Link>
           </div>

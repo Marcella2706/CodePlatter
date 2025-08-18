@@ -14,14 +14,14 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black flex items-center justify-center p-4">
       <div className="text-center max-w-md">
         <AlertTriangle className="h-20 w-20 text-yellow-400 mx-auto mb-6" />
         <h1 className="text-6xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
           404
         </h1>
-        <h2 className="text-2xl font-semibold text-white mb-4">Page Not Found</h2>
-        <p className="text-gray-300 mb-8">
+        <h2 className="text-2xl font-semibold text-blue-700 dark:text-white mb-4">Page Not Found</h2>
+        <p className="text-blue-600 dark:text-gray-300 mb-8">
           The page you're looking for doesn't exist or has been moved.
         </p>
         <Button 

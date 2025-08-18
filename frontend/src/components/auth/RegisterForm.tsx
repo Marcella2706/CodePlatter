@@ -20,7 +20,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   const [currentStep, setCurrentStep] = useState<Step>('details');
   const [loading, setLoading] = useState(false);
 
-  // Registration details
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,9 +27,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // OTP verification
   const [otp, setOtp] = useState('');
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(300);
   const [canResend, setCanResend] = useState(false);
 
   useEffect(() => {
@@ -153,19 +151,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   };
 
   const renderDetailsStep = () => (
-    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md mx-auto bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Join CodePlatter
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-blue-600 dark:text-gray-400">
           Create your account to start coding
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSendOTP} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-gray-200">Full Name</Label>
+            <Label htmlFor="name" className="text-blue-700 dark:text-gray-200">Full Name</Label>
             <div className="relative">
               <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -175,13 +173,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-200">Email</Label>
+            <Label htmlFor="email" className="text-blue-700 dark:text-gray-200">Email</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -191,13 +189,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-gray-200">Password</Label>
+            <Label htmlFor="password" className="text-blue-700 dark:text-gray-200">Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -207,7 +205,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
               <button
                 type="button"
@@ -220,7 +218,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword" className="text-gray-200">Confirm Password</Label>
+            <Label htmlFor="confirmPassword" className="text-blue-700 dark:text-gray-200">Confirm Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -230,7 +228,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
               <button
                 type="button"
@@ -243,7 +241,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
           </div>
 
           <div className="space-y-2">
-            <div className="text-sm text-gray-400">Password Requirements:</div>
+            <div className="text-sm text-blue-600 dark:text-gray-400">Password Requirements:</div>
             <div className="space-y-1 text-xs">
               <div className={`flex items-center ${password.length >= 6 ? 'text-green-400' : 'text-gray-500'}`}>
                 <CheckCircle className="w-3 h-3 mr-1" /> At least 6 characters
@@ -269,9 +267,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             )}
           </Button>
 
-          <div className="text-center text-sm text-gray-400">
+          <div className="text-center text-sm text-blue-600 dark:text-gray-400">
             Already have an account?{' '}
-            <Link to="/login" className="text-blue-400 hover:text-blue-300 transition-colors">
+            <Link to="/login" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
               Sign in
             </Link>
           </div>
@@ -281,19 +279,19 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   );
 
   const renderOTPStep = () => (
-    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md mx-auto bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
           Verify Your Email
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-blue-600 dark:text-gray-400">
           We've sent a 6-digit code to {email}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleVerifyOTP} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="otp" className="text-gray-200">Verification Code</Label>
+            <Label htmlFor="otp" className="text-blue-700 dark:text-gray-200">Verification Code</Label>
             <div className="relative">
               <Shield className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -304,14 +302,14 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 maxLength={6}
                 required
-                className="pl-10 text-center text-lg tracking-widest bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+                className="pl-10 text-center text-lg tracking-widest bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
               />
             </div>
           </div>
 
           <div className="text-center space-y-2">
             {timeLeft > 0 ? (
-              <div className="text-sm text-gray-400 flex items-center justify-center">
+              <div className="text-sm text-blue-600 dark:text-gray-400 flex items-center justify-center">
                 <Clock className="w-4 h-4 mr-1" /> 
                 Code expires in {formatTime(timeLeft)}
               </div>
@@ -324,7 +322,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
                 type="button" 
                 variant="ghost" 
                 onClick={handleResendOTP}
-                className="text-blue-400 hover:text-blue-300"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
               >
                 Resend Code
               </Button>
@@ -350,7 +348,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
             <button
               type="button"
               onClick={handleBack}
-              className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Change Details
@@ -362,20 +360,20 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
   );
 
   const renderSuccessStep = () => (
-    <Card className="w-full max-w-md mx-auto bg-white/5 border-white/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md mx-auto bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
-        <div className="mx-auto w-16 h-16 bg-green-600/20 rounded-full flex items-center justify-center mb-4">
-          <CheckCircle className="w-8 h-8 text-green-400" />
+        <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-600/20 rounded-full flex items-center justify-center mb-4">
+          <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
         </div>
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
           Welcome to CodePlatter!
         </CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardDescription className="text-blue-600 dark:text-gray-400">
           Your account has been created successfully
         </CardDescription>
       </CardHeader>
       <CardContent className="text-center space-y-4">
-        <div className="text-gray-300">
+        <div className="text-blue-700 dark:text-gray-300">
           You're all set! Redirecting you to your dashboard...
         </div>
         <div className="flex items-center justify-center">

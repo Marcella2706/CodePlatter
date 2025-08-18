@@ -156,12 +156,12 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   return (
-    <Card className="bg-white/5 dark:bg-black/10 border-white/10 hover:bg-white/10 dark:hover:bg-black/20 transition-all duration-200 group">
+    <Card className="bg-white dark:bg-white/5 border-blue-200 dark:border-white/10 hover:bg-blue-50 dark:hover:bg-black/20 transition-all duration-200 group">
       <CardContent className="p-4">
         <div className="flex items-start justify-between space-x-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-3">
-              <h3 className="font-medium text-white group-hover:text-blue-300 transition-colors line-clamp-2">
+              <h3 className="font-medium text-blue-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors line-clamp-2">
                 {question.title}
               </h3>
             </div>
@@ -180,14 +180,14 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300 transition-colors bg-blue-600/10 hover:bg-blue-600/20 px-2 py-1 rounded"
+                    className="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors bg-blue-100 dark:bg-blue-600/10 hover:bg-blue-200 dark:hover:bg-blue-600/20 px-2 py-1 rounded"
                   >
                     {getLinkIcon(url)}
                     {getLinkText(url, index)}
                   </a>
                 ))
               ) : (
-                <span className="text-sm text-gray-500">No links available</span>
+                <span className="text-sm text-blue-500 dark:text-gray-500">No links available</span>
               )}
             </div>
           </div>
@@ -202,8 +202,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                 className={`p-2 h-8 w-8 ${
                   isCompleted 
                     ? 'text-green-400 hover:text-green-300' 
-                    : 'text-gray-400 hover:text-white'
-                } hover:bg-white/10`}
+                    : 'text-blue-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white'
+                } hover:bg-blue-50 dark:hover:bg-white/10`}
                 title={isCompleted ? "Mark as incomplete" : "Mark as completed"}
               >
                 {isCompleted ? (
@@ -221,8 +221,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                 className={`p-2 h-8 w-8 ${
                   isBookmarked 
                     ? 'text-yellow-400 hover:text-yellow-300' 
-                    : 'text-gray-400 hover:text-white'
-                } hover:bg-white/10`}
+                    : 'text-blue-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white'
+                } hover:bg-blue-50 dark:hover:bg-white/10`}
                 title={isBookmarked ? "Remove bookmark" : "Add bookmark"}
               >
                 {isBookmarked ? (

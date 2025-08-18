@@ -16,14 +16,12 @@ import NotFound from "./pages/NotFound";
 
 import type { ReactNode } from "react";
 
-// Configure React Query with better defaults
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+      staleTime: 5 * 60 * 1000, 
+      gcTime: 10 * 60 * 1000, 
       retry: (failureCount, error: any) => {
-        // Don't retry on 4xx errors
         if (error?.status >= 400 && error?.status < 500) {
           return false;
         }
@@ -43,10 +41,10 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black flex items-center justify-center">
         <div className="text-center animate-fade-in">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-          <p className="text-white animate-pulse-gentle">Loading your workspace...</p>
+          <p className="text-blue-700 dark:text-white animate-pulse-gentle">Loading your workspace...</p>
         </div>
       </div>
     );
@@ -60,17 +58,17 @@ const AppRoutes = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black flex items-center justify-center">
         <div className="text-center animate-fade-in">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-          <p className="text-white animate-pulse-gentle">Initializing CodePlatter...</p>
+          <p className="text-blue-700 dark:text-white animate-pulse-gentle">Initializing CodePlatter...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black transition-colors duration-300">
       <Navbar />
       <main className="animate-fade-in">
         <Routes>
@@ -129,19 +127,20 @@ const App = () => {
         <AuthProvider>
           <TooltipProvider>
             <BrowserRouter>
-              <div className="app-container">
+              <div className="app-container min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black">
                 <Toaster 
                   richColors 
                   position="top-right"
                   toastOptions={{
                     duration: 4000,
                     style: {
-                      background: 'rgba(0, 0, 0, 0.8)',
-                      color: 'white',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.95)',
+                      color: '#1e3a8a',
+                      border: '1px solid rgba(30, 58, 138, 0.2)',
                       backdropFilter: 'blur(10px)',
                     },
                   }}
+                  theme="light"
                 />
                 <AppRoutes />
               </div>

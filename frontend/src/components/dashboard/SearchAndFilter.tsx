@@ -71,9 +71,9 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   const hasActiveFilters = currentSearch || currentDifficulty || currentSort;
 
   return (
-    <div className="bg-white/5 dark:bg-black/10 border border-white/10 rounded-lg p-4 space-y-4">
+    <div className="bg-white dark:bg-white/5 border border-blue-200 dark:border-white/10 rounded-lg p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white flex items-center">
+        <h3 className="text-lg font-semibold text-blue-700 dark:text-white flex items-center">
           <Filter className="w-5 h-5 mr-2" />
           Search & Filter
         </h3>
@@ -83,7 +83,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
             variant="ghost"
             size="sm"
             onClick={clearFilters}
-            className="text-gray-400 hover:text-white hover:bg-white/10"
+            className="text-blue-600 dark:text-gray-400 hover:text-blue-700 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-white/10"
           >
             <X className="w-4 h-4 mr-1" />
             Clear All
@@ -101,7 +101,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
             placeholder="Search questions..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-10 pr-10 bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
+            className="pl-10 pr-10 bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white placeholder:text-gray-400 focus:border-blue-400 transition-colors"
           />
         </div>
 
@@ -109,26 +109,26 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           value={currentDifficulty || 'all'} 
           onValueChange={handleDifficultyChange}
         >
-          <SelectTrigger className="bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white focus:border-blue-400">
+          <SelectTrigger className="bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white focus:border-blue-400">
             <SelectValue placeholder="Filter by difficulty" />
           </SelectTrigger>
-          <SelectContent className="bg-gray-900/95 border-gray-700 backdrop-blur-xl">
-            <SelectItem value="all" className="text-gray-300 focus:text-white focus:bg-white/10">
+          <SelectContent className="bg-white dark:bg-gray-900/95 border-blue-200 dark:border-gray-700 backdrop-blur-xl">
+            <SelectItem value="all" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               All Difficulties
             </SelectItem>
-            <SelectItem value="Easy" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="Easy" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               <div className="flex items-center">
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
                 Easy
               </div>
             </SelectItem>
-            <SelectItem value="Medium" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="Medium" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               <div className="flex items-center">
                 <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
                 Medium
               </div>
             </SelectItem>
-            <SelectItem value="Hard" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="Hard" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               <div className="flex items-center">
                 <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
                 Hard
@@ -141,23 +141,23 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
           value={currentSort || 'default'} 
           onValueChange={handleSortChange}
         >
-          <SelectTrigger className="bg-white/5 dark:bg-black/10 border-white/20 dark:border-white/10 text-white focus:border-blue-400">
+          <SelectTrigger className="bg-white dark:bg-white/5 border-blue-200 dark:border-white/20 text-blue-700 dark:text-white focus:border-blue-400">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
-          <SelectContent className="bg-gray-900/95 border-gray-700 backdrop-blur-xl">
-            <SelectItem value="default" className="text-gray-300 focus:text-white focus:bg-white/10">
+          <SelectContent className="bg-white dark:bg-gray-900/95 border-blue-200 dark:border-gray-700 backdrop-blur-xl">
+            <SelectItem value="default" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               Default Order
             </SelectItem>
-            <SelectItem value="name_asc" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="name_asc" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               Name (A → Z)
             </SelectItem>
-            <SelectItem value="name_desc" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="name_desc" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               Name (Z → A)
             </SelectItem>
-            <SelectItem value="difficulty_asc" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="difficulty_asc" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               Difficulty (Easy → Hard)
             </SelectItem>
-            <SelectItem value="difficulty_desc" className="text-gray-300 focus:text-white focus:bg-white/10">
+            <SelectItem value="difficulty_desc" className="text-blue-700 dark:text-gray-300 focus:text-blue-800 dark:focus:text-white focus:bg-blue-50 dark:focus:bg-white/10">
               Difficulty (Hard → Easy)
             </SelectItem>
           </SelectContent>
@@ -165,35 +165,35 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
       </div>
 
       {hasActiveFilters && (
-        <div className="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+        <div className="flex flex-wrap gap-2 pt-2 border-t border-blue-200 dark:border-white/10">
           {currentSearch && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-600/20 text-blue-300 border border-blue-500/30">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 dark:bg-blue-600/20 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/30">
               Search: "{currentSearch}"
               <button
                 onClick={() => setSearchInput('')}
-                className="ml-1 hover:text-blue-200"
+                className="ml-1 hover:text-blue-800 dark:hover:text-blue-200"
               >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {currentDifficulty && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-600/20 text-purple-300 border border-purple-500/30">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-purple-100 dark:bg-purple-600/20 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-500/30">
               Difficulty: {currentDifficulty}
               <button
                 onClick={() => onDifficultyChange('')}
-                className="ml-1 hover:text-purple-200"
+                className="ml-1 hover:text-purple-800 dark:hover:text-purple-200"
               >
                 <X className="w-3 h-3" />
               </button>
             </span>
           )}
           {currentSort && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-600/20 text-green-300 border border-green-500/30">
+            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 dark:bg-green-600/20 text-green-700 dark:text-green-300 border border-green-300 dark:border-green-500/30">
               Sort: {currentSort.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
               <button
                 onClick={() => onSortChange('')}
-                className="ml-1 hover:text-green-200"
+                className="ml-1 hover:text-green-800 dark:hover:text-green-200"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -203,7 +203,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
       )}
       
       {!hasActiveFilters && (
-        <div className="text-xs text-gray-500 pt-2 border-t border-white/10">
+        <div className="text-xs text-blue-600 dark:text-gray-500 pt-2 border-t border-blue-200 dark:border-white/10">
           💡 Tip: Search for specific topics like "array", "tree", or "sorting" to find relevant questions
         </div>
       )}
