@@ -2,6 +2,7 @@ Name: Saumya Sood
 
 Enrollment No.: IIT2024018
 
+Live Link: https://code-platter.vercel.app
 
 🍽️ CodePlatter
 
