@@ -44,6 +44,7 @@ const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
 const seeder_1 = require("./utils/seeder");
 const contentRoutes_1 = __importDefault(require("./routes/contentRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const contactRoutes_1 = __importDefault(require("./routes/contactRoutes"));
 dotenv.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -51,6 +52,7 @@ app.use(express_1.default.json());
 app.use('/api/v1/auth', authRoutes_1.default);
 app.use('/api/v1/content', contentRoutes_1.default);
 app.use('/api/v1/user', userRoutes_1.default);
+app.use("/api/v1/contact", contactRoutes_1.default);
 app.get('/', (req, res) => {
     res.send('Server is working!');
 });

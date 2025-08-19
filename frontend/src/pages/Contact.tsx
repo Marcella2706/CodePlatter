@@ -9,11 +9,11 @@ import {
   Send, 
   MessageSquare,
   User,
-  Github,
-  Twitter,
-  Linkedin,
-  CheckCircle
+  CheckCircle,
+  Loader2
 } from 'lucide-react';
+
+const BASE_URL = "http://localhost:5703";
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -37,15 +37,25 @@ const Contact: React.FC = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate form submission
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitted(true);
-      toast({
-        title: "Message sent successfully!",
-        description: "We'll get back to you within 24 hours.",
+      const response = await fetch(`${BASE_URL}/api/v1/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-      setFormData({ name: '', email: '', subject: '', message: '' });
+
+      if (response.ok) {
+        setSubmitted(true);
+        toast({
+          title: "Message sent successfully!",
+          description: "We'll get back to you within 24 hours.",
+        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        throw new Error('Failed to send message');
+      }
     } catch (error) {
       toast({
         title: "Failed to send message",
@@ -56,12 +66,6 @@ const Contact: React.FC = () => {
       setLoading(false);
     }
   };
-
-  const socialLinks = [
-    { icon: Github, name: "GitHub", url: "#" },
-    { icon: Twitter, name: "Twitter", url: "#" },
-    { icon: Linkedin, name: "LinkedIn", url: "#" }
-  ];
 
   const faqs = [
     {
@@ -79,6 +83,14 @@ const Contact: React.FC = () => {
     {
       question: "Can I suggest new features?",
       answer: "Absolutely! We love hearing from our users. Contact us with your ideas."
+    },
+    {
+      question: "How can I track my progress?",
+      answer: "Your progress is automatically tracked when you mark questions as completed. Visit the Progress page to see detailed analytics."
+    },
+    {
+      question: "Can I bookmark questions for later?",
+      answer: "Yes! Use the bookmark icon on any question to save it for later practice."
     }
   ];
 
@@ -227,7 +239,7 @@ const Contact: React.FC = () => {
                     >
                       {loading ? (
                         <div className="flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          <Loader2 className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
                           Sending...
                         </div>
                       ) : (
@@ -267,25 +279,6 @@ const Contact: React.FC = () => {
                     </CardContent>
                   </Card>
                 ))}
-              </div>
-
-              {/* Social Links */}
-              <div className="mt-8">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Connect with us
-                </h3>
-                <div className="flex space-x-4">
-                  {socialLinks.map((social, index) => (
-                    <a
-                      key={index}
-                      href={social.url}
-                      className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white hover:scale-110 transition-all duration-300 shadow-lg"
-                      title={social.name}
-                    >
-                      <social.icon className="w-5 h-5" />
-                    </a>
-                  ))}
-                </div>
               </div>
             </div>
           </div>

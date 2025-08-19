@@ -48,8 +48,11 @@ const Navbar: React.FC = () => {
     { path: '/dashboard', label: 'Questions', icon: BookOpen },
     { path: '/progress', label: 'Progress', icon: BookOpen },
     { path: '/bookmarks', label: 'Bookmarks', icon: BookOpen },
-    { path: '/contact', label: 'Contact Us', icon: Mail }, // ✅ new Contact link
+    { path: '/contact', label: 'Contact Us', icon: Mail },
   ];
+
+  // Conditional logo destination based on authentication
+  const logoDestination = user ? '/dashboard' : '/';
 
   return (
     <nav
@@ -64,7 +67,7 @@ const Navbar: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
     
-          <Link to="/dashboard" className="flex items-center space-x-2 group">
+          <Link to={logoDestination} className="flex items-center space-x-2 group">
             <BookOpen className="h-8 w-8 text-blue-700 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors duration-300" />
             <span className="text-xl font-bold text-blue-700 dark:text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 dark:group-hover:from-blue-300 dark:group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
               CodePlatter

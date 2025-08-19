@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
-const BASE_URL="http://localhost:5703";
+const BASE_URL = "http://localhost:5703"; 
+
 interface User {
   _id: string;
   name: string;
@@ -17,7 +18,7 @@ interface AuthContextType {
   verifyRegistrationOTP: (name: string, email: string, password: string, otp: string) => Promise<void>;
   logout: () => void;
   forgotPassword: (email: string) => Promise<void>;
-  verifyOTP: (email: string, otp: string) => Promise<string>; 
+  verifyOTP: (email: string, otp: string) => Promise<string>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
   loading: boolean;
 }
@@ -44,12 +45,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
-    
+
     if (storedToken && storedUser) {
       try {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
-      } catch (error) {
+      } catch {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
@@ -58,100 +59,92 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/v1/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    const response = await fetch(`${BASE_URL}/api/v1/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Login failed');
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
-
-      setToken(data.token);
-      setUser(data.user);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-    } catch (error) {
-      throw error;
-    }
+    setToken(data.token);
+    setUser(data.user);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
   };
 
   const register = async (name: string, email: string, password: string) => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/v1/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
+    const response = await fetch(`${BASE_URL}/api/v1/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Registration failed');
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
-
-      await login(email, password);
-    } catch (error) {
-      throw error;
-    }
+    await login(email, password);
   };
 
   const sendRegistrationOTP = async (name: string, email: string, password: string) => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/v1/auth/register-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to send registration OTP');
-      }
-
-      return data;
-    } catch (error) {
-      throw error;
-    }
+    const response = await fetch(`${BASE_URL}/api/v1/auth/register-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to send OTP');
+    return data;
   };
 
+  // 🔧 FIXED: use the correct route for registration OTP verification
   const verifyRegistrationOTP = async (name: string, email: string, password: string, otp: string) => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/v1/auth/verify-register-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, password, otp }),
-      });
+    const response = await fetch(`${BASE_URL}/api/v1/auth/verify-register-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, otp }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'OTP verification failed');
 
-      const data = await response.json();
+    setToken(data.token);
+    setUser(data.user);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    return data;
+  };
 
-      if (!response.ok) {
-        throw new Error(data.message || 'OTP verification failed');
-      }
+  const forgotPassword = async (email: string) => {
+    const response = await fetch(`${BASE_URL}/api/v1/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to send OTP');
+    return data;
+  };
 
-      // Auto-login after successful registration
-      setToken(data.token);
-      setUser(data.user);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+  // This one stays on /verify-otp because it's for password reset OTP
+  const verifyOTP = async (email: string, otp: string): Promise<string> => {
+    const response = await fetch(`${BASE_URL}/api/v1/auth/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, otp }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Invalid OTP');
+    return data.token;
+  };
 
-      return data;
-    } catch (error) {
-      throw error;
-    }
+  const resetPassword = async (token: string, newPassword: string) => {
+    const response = await fetch(`${BASE_URL}/api/v1/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, newPassword }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Failed to reset password');
+    return data;
   };
 
   const logout = () => {
@@ -161,73 +154,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('user');
   };
 
-  const forgotPassword = async (email: string) => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/v1/auth/forgot-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to send OTP');
-      }
-
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const verifyOTP = async (email: string, otp: string): Promise<string> => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/v1/auth/verify-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, otp }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Invalid OTP');
-      }
-
-      return data.token; 
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const resetPassword = async (token: string, newPassword: string) => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/v1/auth/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token, newPassword }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to reset password');
-      }
-
-      return data;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const value = {
+  const value: AuthContextType = {
     user,
     token,
     login,

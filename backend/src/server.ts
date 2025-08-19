@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes';
 import { seedData } from './utils/seeder';
 import contentRoutes from './routes/contentRoutes';
 import userRoutes from './routes/userRoutes';
+import contactRoutes from './routes/contactRoutes';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/content', contentRoutes);
 app.use('/api/v1/user', userRoutes);
+app.use("/api/v1/contact", contactRoutes);
 
 app.get('/', (req, res) => {
   res.send('Server is working!');
