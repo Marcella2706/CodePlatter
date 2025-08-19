@@ -13,7 +13,7 @@ import {
   Loader2
 } from 'lucide-react';
 
-const BASE_URL = "http://codeplatter-back.pearl99z.tech";
+const BASE_URL = "https://codeplatter-back.pearl99z.tech";
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({

@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from '../hooks/use-toast';
 import { Bookmark, BookmarkCheck, CheckCircle, Circle, Youtube, Globe } from 'lucide-react';
 
-const BASE_URL = "http://codeplatter-back.pearl99z.tech";
+const BASE_URL = "https://codeplatter-back.pearl99z.tech";
 
 interface Question {
   _id: string;

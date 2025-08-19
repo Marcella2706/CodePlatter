@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
-const BASE_URL = "http://codeplatter-back.pearl99z.tech"; 
+const BASE_URL = "https://codeplatter-back.pearl99z.tech"; 
 
 interface User {
   _id: string;

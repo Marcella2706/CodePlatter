@@ -5,7 +5,7 @@ import { toast } from '@/components/hooks/use-toast';
 import { Loader2, Trophy, Target, Calendar, Award } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-const BASE_URL = "http://codeplatter-back.pearl99z.tech";
+const BASE_URL = "https://codeplatter-back.pearl99z.tech";
 
 interface Question {
   _id: string;

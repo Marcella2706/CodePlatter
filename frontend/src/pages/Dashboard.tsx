@@ -8,7 +8,7 @@ import { toast } from '@/components/hooks/use-toast';
 import { Loader2, BookOpen, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const BASE_URL = "http://codeplatter-back.pearl99z.tech";
+const BASE_URL = "https://codeplatter-back.pearl99z.tech";
 
 interface Question {
   _id: string;
