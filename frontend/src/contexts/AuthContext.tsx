@@ -96,7 +96,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return data;
   };
 
-  // 🔧 FIXED: use the correct route for registration OTP verification
   const verifyRegistrationOTP = async (name: string, email: string, password: string, otp: string) => {
     const response = await fetch(`${BASE_URL}/api/v1/auth/verify-register-otp`, {
       method: 'POST',
@@ -124,7 +123,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return data;
   };
 
-  // This one stays on /verify-otp because it's for password reset OTP
   const verifyOTP = async (email: string, otp: string): Promise<string> => {
     const response = await fetch(`${BASE_URL}/api/v1/auth/verify-otp`, {
       method: 'POST',

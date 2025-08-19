@@ -4,9 +4,6 @@
 @custom-variant dark (&:is(.dark *));
 @custom-variant light (&:is(.light *));
 
-/* Landing page specific animations - scoped to .landing-page class */
-
-/* Keyframes for landing page */
 @keyframes landing-fadeIn {
   from {
     opacity: 0;
@@ -124,7 +121,6 @@
   }
 }
 
-/* Landing page scoped animation classes */
 .landing-page .animate-fade-in {
   animation: landing-fadeIn 0.8s ease-out forwards;
 }
@@ -170,7 +166,6 @@
   animation: landing-gradientShift 3s ease infinite;
 }
 
-/* Landing page stagger animations */
 .landing-page .animate-stagger-1 {
   animation-delay: 100ms;
 }
@@ -195,7 +190,6 @@
   animation-delay: 600ms;
 }
 
-/* Landing page interactive hover effects */
 .landing-page .interactive-hover {
   transition: all 0.3s ease;
 }
@@ -205,7 +199,6 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Landing page glass morphism effect */
 .landing-page .glass-morphism {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);

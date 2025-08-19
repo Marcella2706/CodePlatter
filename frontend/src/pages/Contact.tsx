@@ -142,11 +142,9 @@ const Contact: React.FC = () => {
         </div>
       </section>
 
-      {/* Contact Form and FAQ */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
             <div>
               <Card className="bg-white dark:bg-white/5 border-gray-200 dark:border-white/10 backdrop-blur-sm">
                 <CardHeader>
@@ -254,7 +252,6 @@ const Contact: React.FC = () => {
               </Card>
             </div>
 
-            {/* FAQ Section */}
             <div>
               <div className="mb-8">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">

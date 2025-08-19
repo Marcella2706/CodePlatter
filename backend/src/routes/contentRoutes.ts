@@ -4,10 +4,9 @@ import Category from "../models/Category";
 
 const router = Router();
 
-// Rate limiting for search/filter requests
 const searchLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
-    max: 60, // limit each IP to 60 requests per windowMs
+    windowMs: 1 * 60 * 1000, 
+    max: 60, 
     message: 'Too many search requests, please try again later.',
     standardHeaders: true,
     legacyHeaders: false,
@@ -40,7 +39,6 @@ router.get('/', searchLimiter, async (req, res) => {
             sortBy 
         } = req.query;
 
-        // Validate and sanitize input
         const currentPage = Math.max(1, parseInt(page as string) || 1);
         const itemsPerPage = Math.min(100, Math.max(1, parseInt(limit as string) || 10));
         const searchTerm = search ? (search as string).trim() : '';
@@ -56,7 +54,6 @@ router.get('/', searchLimiter, async (req, res) => {
 
         const pipeline: any[] = [];
 
-        // First, lookup questions with optional filtering
         pipeline.push({
             $lookup: {
                 from: 'questions', 
@@ -64,7 +61,6 @@ router.get('/', searchLimiter, async (req, res) => {
                 foreignField: '_id',
                 as: 'questions',
                 pipeline: [
-                    // Apply question filters if provided
                     ...(searchTerm || difficultyFilter ? [{
                         $match: {
                             ...(searchTerm && { 
@@ -79,7 +75,6 @@ router.get('/', searchLimiter, async (req, res) => {
                         }
                     }] : []),
               
-                    // Apply sorting to questions
                     ...(sortBy ? (() => {
                         const [field, order] = (sortBy as string).split('_');
                         if (field === 'difficulty') {
@@ -99,7 +94,6 @@ router.get('/', searchLimiter, async (req, res) => {
             }
         });
 
-        // Filter out categories with no questions (if search/difficulty filters applied)
         if (searchTerm || difficultyFilter) {
             pipeline.push({
                 $match: {
@@ -108,12 +102,10 @@ router.get('/', searchLimiter, async (req, res) => {
             });
         }
 
-        // Add category sorting
         pipeline.push({
             $sort: { title: 1 }
         });
 
-        // Add fields for pagination
         pipeline.push({
             $addFields: {
                 questionCount: { $size: "$questions" },
@@ -121,20 +113,16 @@ router.get('/', searchLimiter, async (req, res) => {
             }
         });
 
-        // Execute pipeline to get all matching categories
         const allCategories = await Category.aggregate(pipeline);
 
-        // Calculate statistics
         const totalCategories = allCategories.length;
         const totalQuestions = allCategories.reduce((sum, category) => 
             sum + (category.questions ? category.questions.length : 0), 0
         );
 
-        // Apply pagination
         const skip = (currentPage - 1) * itemsPerPage;
         const paginatedCategories = allCategories.slice(skip, skip + itemsPerPage);
 
-        // Calculate pagination metadata
         const totalPages = Math.ceil(totalCategories / itemsPerPage);
         const hasNextPage = currentPage < totalPages;
         const hasPrevPage = currentPage > 1;
@@ -194,7 +182,6 @@ router.get('/', searchLimiter, async (req, res) => {
     }
 });
 
-// Health check endpoint
 router.get('/health', (req, res) => {
     res.json({
         status: 'OK',
@@ -205,7 +192,6 @@ router.get('/health', (req, res) => {
     });
 });
 
-// Statistics endpoint
 router.get('/stats', async (req, res) => {
     try {
         const totalCategories = await Category.countDocuments();

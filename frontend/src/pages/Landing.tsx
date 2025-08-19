@@ -51,7 +51,6 @@ const Landing: React.FC = () => {
 
   return (
     <div className="landing-page min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black">
-      {/* Hero Section */}
       <section className="relative pt-16 pb-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-blue-950 dark:to-black"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)] dark:bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.2),transparent_50%)]"></div>
@@ -111,7 +110,6 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-24 bg-gray-50 dark:bg-black/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
