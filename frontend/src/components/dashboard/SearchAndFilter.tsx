@@ -29,7 +29,7 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
 }) => {
   const [searchInput, setSearchInput] = useState(currentSearch);
   const [isSearching, setIsSearching] = useState(false);
-  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (debounceTimer.current) {

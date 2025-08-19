@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from '@/components/hooks/use-toast';
 import { User, Mail, Lock, Save, Eye, EyeOff, CheckCircle, Loader2 } from 'lucide-react';
 
-const BASE_URL = "http://localhost:5703";
+const BASE_URL = "http://codeplatter-back.pearl99z.tech";
 
 interface UserDetails {
   _id: string;

@@ -4,7 +4,7 @@ import QuestionCard from '@/components/dashboard/QuestionCard';
 import { toast } from '@/components/hooks/use-toast';
 import { Loader2, BookmarkX } from 'lucide-react';
 
-const BASE_URL = "http://localhost:5703";
+const BASE_URL = "https://codeplatter-back.pearl99z.tech";
 
 interface Question {
   _id: string;
