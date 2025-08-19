@@ -11,10 +11,7 @@ import {
   BarChart3,
   Mic,
   Search,
-  Star,
-  Users,
-  Code2,
-  Target,
+
   Sparkles
 } from 'lucide-react';
 
@@ -58,34 +55,7 @@ const Landing: React.FC = () => {
     }
   ];
 
-  const stats = [
-    { icon: Users, number: "10,000+", label: "Active Developers" },
-    { icon: Code2, number: "300+", label: "Coding Questions" },
-    { icon: Target, number: "95%", label: "Success Rate" },
-    { icon: Star, number: "4.9/5", label: "User Rating" }
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      role: "Software Engineer at Google",
-      content: "CodePlatter helped me land my dream job! The question quality is exceptional.",
-      avatar: "SC"
-    },
-    {
-      name: "Alex Rodriguez", 
-      role: "Full Stack Developer",
-      content: "Best platform for interview prep. The progress tracking keeps me motivated.",
-      avatar: "AR"
-    },
-    {
-      name: "Emily Johnson",
-      role: "CS Student",
-      content: "As a student, this free platform has been invaluable for my learning journey.",
-      avatar: "EJ"
-    }
-  ];
-
+ 
   return (
     <div className="landing-page min-h-screen bg-white dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950 dark:to-black">
       <section className="relative pt-8 sm:pt-16 pb-16 sm:pb-32 overflow-hidden">
