@@ -108,7 +108,6 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess }) => {
         title: "Welcome to CodePlatter!",
         description: "Your account has been created successfully.",
       });
-      // Auto-redirect after a short delay
       setTimeout(() => {
         onSuccess?.();
       }, 2000);

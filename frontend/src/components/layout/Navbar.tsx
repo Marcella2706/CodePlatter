@@ -51,7 +51,6 @@ const Navbar: React.FC = () => {
     { path: '/contact', label: 'Contact Us', icon: Mail },
   ];
 
-  // Conditional logo destination based on authentication
   const logoDestination = user ? '/dashboard' : '/';
 
   return (
