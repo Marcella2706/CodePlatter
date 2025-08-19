@@ -1,0 +1,29 @@
+services:
+  mongo:
+    image: mongo:7.0
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: saumya
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-data:/data/db
+
+
+  backend:
+    build: .
+    restart: always
+    ports:
+      - "5703:5703"
+    environment:
+      JWT_SECRET: supersecretkey
+      PORT: 5703
+      MONGODB_URL: mongodb://saumya:password@mongo:27017/myMongo?authSource=admin
+      EMAIL_FROM: saumyasood6@gmail.com
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
+    driver: local
